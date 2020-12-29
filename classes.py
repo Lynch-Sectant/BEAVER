@@ -33,7 +33,7 @@ class Unit(Entity):
     pass
 
 
-class Worker(Unit):
+class Attacker(Unit):
     pass
 
 
@@ -41,5 +41,5 @@ class Supporter(Unit):
     pass
 
 
-class Warrior(Unit):
+class Shooter(Unit):
     pass
