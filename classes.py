@@ -43,3 +43,19 @@ class Supporter(Unit):
 
 class Shooter(Unit):
     pass
+
+
+class Base(Building):
+    pass
+
+
+class Defense_Tower(Building):
+    pass
+
+
+class Wall(Building):
+    pass
+
+
+class Farm(Building):
+    pass
