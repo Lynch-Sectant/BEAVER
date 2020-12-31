@@ -1,6 +1,59 @@
 import pygame
 
 
+class Tile:
+    def __init__(self):
+        self.color = pygame.Color('black')
+
+
+class Board:
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+        self.tiles = [[Tile() for _ in range(width)] for _ in range(height)]
+        self.left = 10
+        self.top = 10
+        self.tile_size = 20
+
+    def set_position(self, left, top, tile_size):
+        self.left = left
+        self.top = top
+        self.tile_size = tile_size
+
+    def render(self, screen):
+        for h in range(self.top, self.top + self.height * self.tile_size, self.tile_size):
+            for w in range(self.left, self.left + self.width * self.tile_size, self.tile_size):
+                pygame.draw.rect(screen, pygame.Color('white'), (w, h, self.tile_size, self.tile_size))
+                a = (h - self.top) // self.tile_size
+                b = (w - self.left) // self.tile_size
+                pygame.draw.rect(screen, self.tiles[a][b].color, (w + 1, h + 1, self.tile_size - 2, self.tile_size - 2))
+
+    def get_tile(self, mouse_pos):
+        if mouse_pos[0] > self.left + self.tile_size * self.width:
+            return None
+        elif mouse_pos[1] > self.top + self.tile_size * self.height:
+            return None
+        elif mouse_pos[0] < self.left or mouse_pos[1] < self.top:
+            return None
+        else:
+            ans = (mouse_pos[0] - self.left) // self.tile_size, (mouse_pos[0] - self.top) // self.tile_size
+            return (ans)
+
+    def on_click(self, mouse_pos):
+        if mouse_pos is not None:
+            for h in range(self.height):
+                for w in range(self.width):
+                    if h == mouse_pos[0] or w == mouse_pos[1]:
+                        if self.tiles[h][w].color == pygame.Color('black'):
+                            self.tiles[h][w].color = pygame.Color('white')
+                        elif self.tiles[h][w].color == pygame.Color('white'):
+                            self.tiles[h][w].color = pygame.Color('black')
+
+    def get_click(self, mouse_pos):
+        c = self.get_tile(mouse_pos)
+        self.on_click(c)
+
+
 class Entity(pygame.sprite.Sprite):
     def __init__(self, sheet, columns, rows, x, y, board):
         super().__init__(all_sprites)
