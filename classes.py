@@ -1,9 +1,11 @@
 import pygame
-
+PAUSE = True
+CHOSEN_ENTITY = None
 
 class Tile:
     def __init__(self):
         self.color = pygame.Color('black')
+        self.drawn = None
 
 
 class Board:
@@ -40,14 +42,8 @@ class Board:
             return (ans)
 
     def on_click(self, mouse_pos):
-        if mouse_pos is not None:
-            for h in range(self.height):
-                for w in range(self.width):
-                    if h == mouse_pos[0] or w == mouse_pos[1]:
-                        if self.tiles[h][w].color == pygame.Color('black'):
-                            self.tiles[h][w].color = pygame.Color('white')
-                        elif self.tiles[h][w].color == pygame.Color('white'):
-                            self.tiles[h][w].color = pygame.Color('black')
+        if mouse_pos is not None and PAUSE is True:
+            self.tiles[mouse_pos[0]][mouse_pos[1]].drawn = CHOSEN_ENTITY
 
     def get_click(self, mouse_pos):
         c = self.get_tile(mouse_pos)
