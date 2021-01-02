@@ -1,4 +1,5 @@
 import pygame
+
 PAUSE = True
 CHOSEN_ENTITY = None
 
@@ -80,7 +81,6 @@ class Building(Entity):
 
 class Unit(Entity):
     pass
-
 
 class Attacker(Unit):
     pass
