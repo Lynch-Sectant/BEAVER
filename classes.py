@@ -3,10 +3,12 @@ import pygame
 PAUSE = True
 CHOSEN_ENTITY = None
 
+
 class Tile:
     def __init__(self):
         self.color = pygame.Color('black')
         self.drawn = None
+        self.is_alive_next_move = False
 
 
 class Board:
@@ -50,6 +52,15 @@ class Board:
         c = self.get_tile(mouse_pos)
         self.on_click(c)
 
+    def next_move(self):
+        for h in range(self.height):
+            for w in range(self.width):
+                self.tiles[h][w].is_alive_next_move = self.tiles[h][w].drawn.check_move()
+        for h in range(self.height):
+            for w in range(self.width):
+                if not self.tiles[h][w].is_alive_next_move:
+                    self.tiles[h][w].drawn = None
+
 
 class Entity(pygame.sprite.Sprite):
     def __init__(self, sheet, columns, rows, x, y, board):
@@ -81,6 +92,7 @@ class Building(Entity):
 
 class Unit(Entity):
     pass
+
 
 class Attacker(Unit):
     pass
