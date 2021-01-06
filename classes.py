@@ -2,6 +2,9 @@ import pygame
 
 PAUSE = True
 CHOSEN_ENTITY = None
+all_sprites = pygame.sprite.Group()
+player_units = pygame.sprite.Group()
+enemy_units = pygame.sprite.Group()
 
 
 class Tile:
