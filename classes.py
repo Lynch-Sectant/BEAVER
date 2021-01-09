@@ -86,7 +86,8 @@ class Entity(pygame.sprite.Sprite):
 
 
 class Building(Entity):
-    pass
+    def pattern(self):
+        pass
 
 
 class Unit(Entity):
