@@ -3,15 +3,14 @@ import pygame
 PAUSE = True
 CHOSEN_ENTITY = None
 all_sprites = pygame.sprite.Group()
-player_units = pygame.sprite.Group()
-enemy_units = pygame.sprite.Group()
+PLAYER_UNITS = pygame.sprite.Group()
+ENEMY_UNITS = pygame.sprite.Group()
 
 
 class Tile:
     def __init__(self):
         self.color = pygame.Color('black')
         self.drawn = None
-        self.is_alive_next_move = False
 
 
 class Board:
@@ -35,6 +34,7 @@ class Board:
                 a = (h - self.top) // self.tile_size
                 b = (w - self.left) // self.tile_size
                 pygame.draw.rect(screen, self.tiles[a][b].color, (w + 1, h + 1, self.tile_size - 2, self.tile_size - 2))
+        all_sprites.draw(screen)
 
     def get_tile(self, mouse_pos):
         if mouse_pos[0] > self.left + self.tile_size * self.width:
@@ -55,24 +55,20 @@ class Board:
         c = self.get_tile(mouse_pos)
         self.on_click(c)
 
-    def next_move(self):
-        for h in range(self.height):
-            for w in range(self.width):
-                self.tiles[h][w].is_alive_next_move = self.tiles[h][w].drawn.check_move()
-        for h in range(self.height):
-            for w in range(self.width):
-                if not self.tiles[h][w].is_alive_next_move:
-                    self.tiles[h][w].drawn = None
-
 
 class Entity(pygame.sprite.Sprite):
-    def __init__(self, sheet, columns, rows, x, y, board):
+    def __init__(self, sheet, columns, rows, x, y, board, team):
         super().__init__(all_sprites)
         self.frames = []
         self.cut_sheet(sheet, columns, rows)
         self.cur_frame = 0
         self.image = self.frames[self.cur_frame]
         self.set_pos(board, x, y)
+        if team == 'player':
+            PLAYER_UNITS.add(self)
+        else:
+            ENEMY_UNITS.add(self)
+            # add sprite into group
 
     def set_pos(self, board, x, y):
         self.coords = x, y
@@ -94,22 +90,40 @@ class Building(Entity):
 
 
 class Unit(Entity):
+    def __init__(self, , sheet, columns, rows, x, y, board, price, speed, hp, dmg, vision_radius, team):
+        super().__init__(sheet, columns, rows, x, y, board, team)
+        self.price = price
+        self.speed = speed
+        self.hp = hp
+        self.dmg = dmg
+        self.vision_radius = vision_radius
+
+    def move(self, move_coords):
+        pass
+
+    def pattern(self):
+        pass
+
+    def second_pattern(self):
+        pass
+
+    def attack(self):
+        pass
+
+
+class Warrior(Unit):
     pass
 
 
-class Attacker(Unit):
+class Archer(Unit):
     pass
 
 
-class Supporter(Unit):
+class GasFighter(Unit):
     pass
 
 
-class Shooter(Unit):
-    pass
-
-
-class Base(Building):
+class Main_Tower(Building):
     pass
 
 
