@@ -139,22 +139,30 @@ class Wall(Building):
 class Farm(Building):
     pass
 
+
 class Projectile(Entity):
     def __init__(self, self, sheet, columns, rows, x, y, board, team, vx, vy, st_coords):
         super().__init__(self, sheet, columns, rows, x, y, board, team)
         self.vx = vx
         self.vy = vy
         self.coords = st_coords
+
     def move(self):
         self.coords = self.coords[0] + self.vx, self.coords[1] + self.vy
+
     def pattern(self):
         pass
+
+
 class Arrow(Projectile):
     def __init__(self, sheet, columns, rows, x, y, board, team, vx, vy, st_coords, piercing=0):
         super.__init__(sheet, columns, rows, x, y, board, team, vx, vy, st_coords)
         self.piercing = piercing
+
     def pattern(self):
         pass
+
+
 class Cloud(Projectile):
     def pattern(self):
         pass
