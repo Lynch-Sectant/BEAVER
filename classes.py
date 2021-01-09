@@ -64,6 +64,7 @@ class Entity(pygame.sprite.Sprite):
         self.cur_frame = 0
         self.image = self.frames[self.cur_frame]
         self.set_pos(board, x, y)
+        self.board = board
         if team == 'player':
             PLAYER_UNITS.add(self)
         else:
@@ -86,12 +87,16 @@ class Entity(pygame.sprite.Sprite):
 
 
 class Building(Entity):
+    def __init__(self, sheet, columns, rows, x, y, board, team, hp):
+        super().__init__(sheet, columns, rows, x, y, board, team)
+        self.hp = hp
+
     def pattern(self):
         pass
 
 
 class Unit(Entity):
-    def __init__(self, , sheet, columns, rows, x, y, board, price, speed, hp, dmg, vision_radius, team):
+    def __init__(self, sheet, columns, rows, x, y, board, price, speed, hp, dmg, vision_radius, team):
         super().__init__(sheet, columns, rows, x, y, board, team)
         self.price = price
         self.speed = speed
@@ -132,16 +137,31 @@ class Defense_Tower(Building):
     pass
 
 
+# all code from here
 class Wall(Building):
-    pass
+    def __init__(self, sheet, columns, rows, x, y, board, team, hp):
+        super().__init__(sheet, columns, rows, x, y, board, team, hp)
+        self.checked = False
+        self.pattern()
 
+    def pattern(self):
+        for h in range(-1, 2):
+            for w in range(-1, 2):
+                if self.board.tiles[self.coords[0] + w][self.coords[1] + h].drawn.__class__ == Wall:
+                    if self.board.tiles[self.coords[0] + w][self.coords[1] + h].drawn.checked is False:
+                        self.hp += ADDED
+                        self.board.tiles[self.coords[0] + w][self.coords[1] + h].drawn.checked = True
+                    self.board.tiles[self.coords[0] + w][self.coords[1] + h].drawn.pattern
+
+
+# to here needs testing!
 
 class Farm(Building):
     pass
 
 
 class Projectile(Entity):
-    def __init__(self, self, sheet, columns, rows, x, y, board, team, vx, vy, st_coords):
+    def __init__(self, sheet, columns, rows, x, y, board, team, vx, vy, st_coords):
         super().__init__(self, sheet, columns, rows, x, y, board, team)
         self.vx = vx
         self.vy = vy
