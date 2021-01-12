@@ -105,7 +105,8 @@ class Unit(Entity):
         self.vision_radius = vision_radius
 
     def move(self, move_coords):
-        pass
+        self.board.tiles[self.coords[1]][self.coords[1]].drawn = None
+        self.set_pos(self.board, *move_coords)
 
     def pattern(self):
         pass
