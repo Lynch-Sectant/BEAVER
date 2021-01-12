@@ -5,6 +5,9 @@ CHOSEN_ENTITY = None
 all_sprites = pygame.sprite.Group()
 PLAYER_UNITS = pygame.sprite.Group()
 ENEMY_UNITS = pygame.sprite.Group()
+ADDED = 0
+METHACASH_ADDED = 0
+PLYER_METHACASH = 0
 
 
 class Tile:
@@ -158,7 +161,8 @@ class Wall(Building):
 # to here needs testing!
 
 class Farm(Building):
-    pass
+    def pattern(self):
+        PLAYER_METHACASH += METHACASH_ADDED
 
 
 class Projectile(Entity):
