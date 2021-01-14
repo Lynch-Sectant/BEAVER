@@ -182,6 +182,7 @@ class Projectile(Entity):
 
     def move(self):
         self.coords = self.coords[0] + self.vx, self.coords[1] + self.vy
+        self.set_pos(self.coords[1], self.coords[0])
 
     def pattern(self):
         pass
