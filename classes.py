@@ -5,6 +5,7 @@ CHOSEN_ENTITY = None
 all_sprites = pygame.sprite.Group()
 PLAYER_UNITS = pygame.sprite.Group()
 ENEMY_UNITS = pygame.sprite.Group()
+ADDED = 0
 
 
 class Tile:
