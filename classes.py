@@ -77,8 +77,8 @@ class Entity(pygame.sprite.Sprite):
     def set_pos(self, board, x, y):
         self.coords = x, y
         if board.tiles[y][x] is None:
-            self.rect.x = board.left + x * board.tile_size
-            self.rect.y = board.top + y * board.tile_size
+            self.rect.x = board.left + (x - 1) * board.tile_size
+            self.rect.y = board.top + (y - 1) * board.tile_size
         else:
             self.kill()
 
