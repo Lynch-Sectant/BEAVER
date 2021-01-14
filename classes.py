@@ -76,11 +76,8 @@ class Entity(pygame.sprite.Sprite):
 
     def set_pos(self, board, x, y):
         self.coords = x, y
-        if board.tiles[y][x] is None:
-            self.rect.x = board.left + (x - 1) * board.tile_size
-            self.rect.y = board.top + (y - 1) * board.tile_size
-        else:
-            self.kill()
+        self.rect.x = board.left + (x - 1) * board.tile_size
+        self.rect.y = board.top + (y - 1) * board.tile_size
 
     def cut_sheet(self, sheet, columns, rows):
         self.rect = pygame.Rect(0, 0, sheet.get_width() // columns,
@@ -88,8 +85,7 @@ class Entity(pygame.sprite.Sprite):
         for j in range(rows):
             for i in range(columns):
                 frame_location = (self.rect.w * i, self.rect.h * j)
-                self.frames.append(sheet.subsurface(pygame.Rect(
-                    frame_location, self.rect.size)))
+                self.frames.append(sheet.subsurface(pygame.Rect(frame_location, self.rect.size)))
 
 
 class Building(Entity):
@@ -174,7 +170,7 @@ class Warrior(Unit):
                 y = vector[1] // abs(vector[1])
             else:
                 y = 0
-            near = [vector[0] % self.speed * x, near % self.speed * y]
+            near = [vector[0] % self.speed, vector[1] % self.speed]
             for r in near:
                 if r == 0 and near.index(r) == 0:
                     near[near.index(r)] = self.speed * x
@@ -196,7 +192,7 @@ class Archer(Unit):
                 y = vector[1] // abs(vector[1])
             else:
                 y = 0
-            near = [vector[0] % self.speed * x, near % self.speed * y]
+            near = [vector[0] % self.speed, vector[1] % self.speed]
             for r in near:
                 if r == 0 and near.index(r) == 0:
                     near[near.index(r)] = self.speed * x
@@ -218,7 +214,7 @@ class GasFighter(Unit):
                 y = vector[1] // abs(vector[1])
             else:
                 y = 0
-            near = [vector[0] % self.speed * x, near % self.speed * y]
+            near = [vector[0] % self.speed, vector[1] % self.speed]
             for r in near:
                 if r == 0 and near.index(r) == 0:
                     near[near.index(r)] = self.speed * x
