@@ -149,8 +149,8 @@ class Wall(Building):
     def pattern(self):
         for h in range(-1, 2):
             for w in range(-1, 2):
-                if self.board.tiles[self.coords[0] + w][self.coords[1] + h].drawn.__class__ == Wall:
-                    if self.board.tiles[self.coords[0] + w][self.coords[1] + h].drawn.checked is False:
+                if self.board.tiles[self.coords[0] + h][self.coords[1] + w].drawn.__class__ == Wall:
+                    if self.board.tiles[self.coords[0] + h][self.coords[1] + w].drawn.checked is False:
                         self.hp += ADDED
                         self.board.tiles[self.coords[0] + w][self.coords[1] + h].drawn.checked = True
                     self.board.tiles[self.coords[0] + w][self.coords[1] + h].drawn.pattern
