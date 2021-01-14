@@ -6,6 +6,8 @@ all_sprites = pygame.sprite.Group()
 PLAYER_UNITS = pygame.sprite.Group()
 ENEMY_UNITS = pygame.sprite.Group()
 ADDED = 0
+METHACASH = 0
+METHACASH_ADDED = 0
 
 
 class Tile:
@@ -132,7 +134,8 @@ class GasFighter(Unit):
 
 
 class Main_Tower(Building):
-    pass
+    def pattern(self):
+        METHACASH += METHACASH_ADDED
 
 
 class Defense_Tower(Building):
@@ -159,7 +162,8 @@ class Wall(Building):
 # to here needs testing!
 
 class Farm(Building):
-    pass
+    def pattern(self):
+        METHACASH += METHACASH_ADDED // 2
 
 
 class Projectile(Entity):
