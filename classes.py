@@ -142,6 +142,7 @@ class GasFighter(Unit):
 
 class Main_Tower(Building):
     def pattern(self):
+        global METHACASH
         METHACASH += METHACASH_ADDED
 
 
@@ -170,6 +171,7 @@ class Wall(Building):
 
 class Farm(Building):
     def pattern(self):
+        global METHACASH
         METHACASH += METHACASH_ADDED // 2
 
 
