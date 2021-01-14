@@ -107,9 +107,10 @@ class Unit(Entity):
         self.dmg = dmg
         self.vision_radius = vision_radius
 
-    def move(self, move_coords):
+    def move(self, move_vector):
         self.board.tiles[self.coords[1]][self.coords[1]].drawn = None
-        self.set_pos(self.board, *move_coords)
+        move_vector = move_vector[0] + self.coords[0], move_vector[1] + self.coords[1]
+        self.set_pos(self.board, *move_vector)
 
     def pattern(self):
         pass
@@ -122,15 +123,21 @@ class Unit(Entity):
 
 
 class Warrior(Unit):
-    pass
+    def move(self, move_coords):
+        self.direction = move_coords[0] - self.coords[0], move_coords[1] - self.coords[1]
+        super().move((move_coords[0] // self.speed, move_coords[1] // self.speed))
 
 
 class Archer(Unit):
-    pass
+    def move(self, move_coords):
+        self.direction = move_coords[0] - self.coords[0], move_coords[1] - self.coords[1]
+        super().move((move_coords[0] // self.speed, move_coords[1] // self.speed))
 
 
 class GasFighter(Unit):
-    pass
+    def move(self, move_coords):
+        self.direction = move_coords[0] - self.coords[0], move_coords[1] - self.coords[1]
+        super().move((move_coords[0] // self.speed, move_coords[1] // self.speed))
 
 
 class Main_Tower(Building):
