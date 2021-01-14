@@ -76,8 +76,11 @@ class Entity(pygame.sprite.Sprite):
 
     def set_pos(self, board, x, y):
         self.coords = x, y
-        self.rect.x = board.left + x * board.tile_size
-        self.rect.y = board.top + y * board.tile_size
+        if board.tiles[y][x] is None:
+            self.rect.x = board.left + x * board.tile_size
+            self.rect.y = board.top + y * board.tile_size
+        else:
+            self.kill()
 
     def cut_sheet(self, sheet, columns, rows):
         self.rect = pygame.Rect(0, 0, sheet.get_width() // columns,
@@ -106,6 +109,7 @@ class Unit(Entity):
         self.hp = hp
         self.dmg = dmg
         self.vision_radius = vision_radius
+        self.destination = self.coords
 
     def move(self, move_vector):
         self.board.tiles[self.coords[1]][self.coords[1]].drawn = None
@@ -124,20 +128,51 @@ class Unit(Entity):
 
 class Warrior(Unit):
     def move(self, move_coords):
-        self.direction = move_coords[0] - self.coords[0], move_coords[1] - self.coords[1]
-        super().move((move_coords[0] // self.speed, move_coords[1] // self.speed))
+        self.destination = move_coords
+        if self.destination[0] != self.coords[0] or self.destination != self.coords[1]:
+            vector = self.destination[0] - self.coords[0], self.destination[1] - self.coords[1]
+            if vector[0] != 0:
+                x = vector[0] // abs(vector[0])
+            else:
+                x = 0
+            if vector[1] != 0:
+                y = vector[1] // abs(vector[1])
+            else:
+                y = 0
+            super().move((self.speed * x, self.spped * y))
+
 
 
 class Archer(Unit):
     def move(self, move_coords):
-        self.direction = move_coords[0] - self.coords[0], move_coords[1] - self.coords[1]
-        super().move((move_coords[0] // self.speed, move_coords[1] // self.speed))
+        self.destination = move_coords
+        if self.destination[0] != self.coords[0] or self.destination != self.coords[1]:
+            vector = self.destination[0] - self.coords[0], self.destination[1] - self.coords[1]
+            if vector[0] != 0:
+                x = vector[0] // abs(vector[0])
+            else:
+                x = 0
+            if vector[1] != 0:
+                y = vector[1] // abs(vector[1])
+            else:
+                y = 0
+            super().move((self.speed * x, self.spped * y))
 
 
 class GasFighter(Unit):
     def move(self, move_coords):
-        self.direction = move_coords[0] - self.coords[0], move_coords[1] - self.coords[1]
-        super().move((move_coords[0] // self.speed, move_coords[1] // self.speed))
+        self.destination = move_coords
+        if self.destination[0] != self.coords[0] or self.destination != self.coords[1]:
+            vector = self.destination[0] - self.coords[0], self.destination[1] - self.coords[1]
+            if vector[0] != 0:
+                x = vector[0] // abs(vector[0])
+            else:
+                x = 0
+            if vector[1] != 0:
+                y = vector[1] // abs(vector[1])
+            else:
+                y = 0
+            super().move((self.speed * x, self.spped * y))
 
 
 class Main_Tower(Building):
