@@ -198,7 +198,7 @@ class Wall(Building):
                 if self.board.tiles[self.coords[0] + h][self.coords[1] + w].drawn.__class__ == Wall:
                     if self.board.tiles[self.coords[0] + h][self.coords[1] + w].drawn.checked is False:
                         self.hp += ADDED
-                        self.board.tiles[self.coords[0] + w][self.coords[1] + h].drawn.checked = True
+                        self.board.tiles[self.coords[0] + h][self.coords[1] + w].drawn.checked = True
                     self.board.tiles[self.coords[0] + w][self.coords[1] + h].drawn.pattern
 
 
