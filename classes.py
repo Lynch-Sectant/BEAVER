@@ -126,6 +126,41 @@ class Unit(Entity):
         pass
 
 
+# class Testing_object(Unit):
+#    def __init__(self, columns, rows, x, y, board, price=0, speed=1, hp=1, dmg=0, vision_radius=0,
+#                 team='player',  sheet=None):
+#        super().__init__(sheet, columns, rows, x, y, board, price, speed, hp, dmg, vision_radius, team)
+#
+#    def move(self, move_coords):
+#        self.destination = move_coords
+#        if self.destination[0] != self.coords[0] or self.destination != self.coords[1]:
+#            vector = self.destination[0] - self.coords[0], self.destination[1] - self.coords[1]
+#            if vector[0] != 0:
+#                x = vector[0] // abs(vector[0])
+#            else:
+#                x = 0
+#            if vector[1] != 0:
+#                y = vector[1] // abs(vector[1])
+#            else:
+#                y = 0
+#            super().move((self.speed * x, self.spped * y))
+
+
+# def possible_to_pass(obj, coords):
+#    vector = obj.destination[0] - obj.coords[0], obj.destination[1] - obj.coords[1]
+#    if vector[0] != 0:
+#        x = vector[0] // abs(vector[0])
+#    else:
+#        x = 0
+#    if vector[1] != 0:
+#        y = vector[1] // abs(vector[1])
+#    else:
+#        y = 0
+#    test = Testing_object(0, 0, obj.coords[0] + x, obj.coords[1] + y, obj.board)
+#    test.move(coords)
+#    return test.is_alive()
+
+
 class Warrior(Unit):
     def move(self, move_coords):
         self.destination = move_coords
@@ -139,8 +174,13 @@ class Warrior(Unit):
                 y = vector[1] // abs(vector[1])
             else:
                 y = 0
-            super().move((self.speed * x, self.spped * y))
-
+            near = [vector[0] % self.speed * x, near % self.speed * y]
+            for r in near:
+                if r == 0 and near.index(r) == 0:
+                    near[near.index(r)] = self.speed * x
+                elif r == 0:
+                    near[1] = self.speed * y
+            super().move(tuple(near))
 
 
 class Archer(Unit):
@@ -156,7 +196,13 @@ class Archer(Unit):
                 y = vector[1] // abs(vector[1])
             else:
                 y = 0
-            super().move((self.speed * x, self.spped * y))
+            near = [vector[0] % self.speed * x, near % self.speed * y]
+            for r in near:
+                if r == 0 and near.index(r) == 0:
+                    near[near.index(r)] = self.speed * x
+                elif r == 0:
+                    near[1] = self.speed * y
+            super().move(tuple(near))
 
 
 class GasFighter(Unit):
@@ -172,7 +218,13 @@ class GasFighter(Unit):
                 y = vector[1] // abs(vector[1])
             else:
                 y = 0
-            super().move((self.speed * x, self.spped * y))
+            near = [vector[0] % self.speed * x, near % self.speed * y]
+            for r in near:
+                if r == 0 and near.index(r) == 0:
+                    near[near.index(r)] = self.speed * x
+                elif r == 0:
+                    near[1] = self.speed * y
+            super().move(tuple(near))
 
 
 class Main_Tower(Building):
