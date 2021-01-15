@@ -9,7 +9,7 @@ PLAYER_BUILDINGS = pygame.sprite.Group()
 ENEMY_BUILDINGS = pygame.sprite.Group()
 ADDED = 0
 METHACASH = 0
-METHACASH_ADDED = 0
+METHACASH_ADDED = 10
 
 
 class Tile:
