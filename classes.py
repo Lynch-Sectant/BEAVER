@@ -5,6 +5,8 @@ CHOSEN_ENTITY = None
 all_sprites = pygame.sprite.Group()
 PLAYER_UNITS = pygame.sprite.Group()
 ENEMY_UNITS = pygame.sprite.Group()
+PLAYER_BUILDINGS = pygame.sprite.Group()
+ENEMY_BUILDINGS = pygame.sprite.Group()
 ADDED = 0
 METHACASH = 0
 METHACASH_ADDED = 0
@@ -68,11 +70,7 @@ class Entity(pygame.sprite.Sprite):
         self.image = self.frames[self.cur_frame]
         self.set_pos(board, x, y)
         self.board = board
-        if team == 'player':
-            PLAYER_UNITS.add(self)
-        else:
-            ENEMY_UNITS.add(self)
-            # add sprite into group
+        self.team = team
 
     def set_pos(self, board, x, y):
         self.coords = x, y
@@ -92,6 +90,10 @@ class Building(Entity):
     def __init__(self, sheet, columns, rows, x, y, board, team, hp):
         super().__init__(sheet, columns, rows, x, y, board, team)
         self.hp = hp
+        if self.team == 'player':
+            PLAYER_BUILDINGS.add(self)
+        else:
+            ENEMY_BUILDINGS.add(self)
 
     def pattern(self):
         pass
@@ -106,8 +108,12 @@ class Unit(Entity):
         self.dmg = dmg
         self.vision_radius = vision_radius
         self.destination = self.coords
+        if self.team == 'player':
+            PLAYER_UNITS.add(self)
+        else:
+            ENEMY_UNITS.add(self)
 
-    def move(self, move_vector):
+    def move_on_vector(self, move_vector):
         self.board.tiles[self.coords[1]][self.coords[1]].drawn = None
         move_vector = move_vector[0] + self.coords[0], move_vector[1] + self.coords[1]
         self.set_pos(self.board, *move_vector)
@@ -121,106 +127,47 @@ class Unit(Entity):
     def attack(self):
         pass
 
+    def can_go_to(self, coords):
+        for h in range(self.coords[0], self.coords[0] + coords[0]):
+            for w in range(self.coords[1], self.coords[1] + coords[1]):
+                if self.board.tiles[h][w].drawn is not None:
+                    if self.board.tiles[h][w].drawn.team != 'player':
+                        return False
 
-# class Testing_object(Unit):
-#    def __init__(self, columns, rows, x, y, board, price=0, speed=1, hp=1, dmg=0, vision_radius=0,
-#                 team='player',  sheet=None):
-#        super().__init__(sheet, columns, rows, x, y, board, price, speed, hp, dmg, vision_radius, team)
-#
-#    def move(self, move_coords):
-#        self.destination = move_coords
-#        if self.destination[0] != self.coords[0] or self.destination != self.coords[1]:
-#            vector = self.destination[0] - self.coords[0], self.destination[1] - self.coords[1]
-#            if vector[0] != 0:
-#                x = vector[0] // abs(vector[0])
-#            else:
-#                x = 0
-#            if vector[1] != 0:
-#                y = vector[1] // abs(vector[1])
-#            else:
-#                y = 0
-#            super().move((self.speed * x, self.spped * y))
-
-
-# def possible_to_pass(obj, coords):
-#    vector = obj.destination[0] - obj.coords[0], obj.destination[1] - obj.coords[1]
-#    if vector[0] != 0:
-#        x = vector[0] // abs(vector[0])
-#    else:
-#        x = 0
-#    if vector[1] != 0:
-#        y = vector[1] // abs(vector[1])
-#    else:
-#        y = 0
-#    test = Testing_object(0, 0, obj.coords[0] + x, obj.coords[1] + y, obj.board)
-#    test.move(coords)
-#    return test.is_alive()
+    def move(self, move_coords):
+        self.destination = move_coords
+        if self.destination[0] != self.coords[0] or self.destination != self.coords[1]:
+            vector = self.destination[0] - self.coords[0], self.destination[1] - self.coords[1]
+            if vector[0] != 0:
+                x = vector[0] // abs(vector[0])
+            else:
+                x = 0
+            if vector[1] != 0:
+                y = vector[1] // abs(vector[1])
+            else:
+                y = 0
+            near = [vector[0] % self.speed, vector[1] % self.speed]
+            for r in near:
+                if r == 0 and near.index(r) == 0:
+                    near[near.index(r)] = self.speed * x
+                elif r == 0:
+                    near[1] = self.speed * y
+            if self.can_go_to(near):
+                self.move_on_vector(tuple(near))
+            else:
+                self.pattern()
 
 
 class Warrior(Unit):
-    def move(self, move_coords):
-        self.destination = move_coords
-        if self.destination[0] != self.coords[0] or self.destination != self.coords[1]:
-            vector = self.destination[0] - self.coords[0], self.destination[1] - self.coords[1]
-            if vector[0] != 0:
-                x = vector[0] // abs(vector[0])
-            else:
-                x = 0
-            if vector[1] != 0:
-                y = vector[1] // abs(vector[1])
-            else:
-                y = 0
-            near = [vector[0] % self.speed, vector[1] % self.speed]
-            for r in near:
-                if r == 0 and near.index(r) == 0:
-                    near[near.index(r)] = self.speed * x
-                elif r == 0:
-                    near[1] = self.speed * y
-            super().move(tuple(near))
+    pass
 
 
 class Archer(Unit):
-    def move(self, move_coords):
-        self.destination = move_coords
-        if self.destination[0] != self.coords[0] or self.destination != self.coords[1]:
-            vector = self.destination[0] - self.coords[0], self.destination[1] - self.coords[1]
-            if vector[0] != 0:
-                x = vector[0] // abs(vector[0])
-            else:
-                x = 0
-            if vector[1] != 0:
-                y = vector[1] // abs(vector[1])
-            else:
-                y = 0
-            near = [vector[0] % self.speed, vector[1] % self.speed]
-            for r in near:
-                if r == 0 and near.index(r) == 0:
-                    near[near.index(r)] = self.speed * x
-                elif r == 0:
-                    near[1] = self.speed * y
-            super().move(tuple(near))
+    pass
 
 
 class GasFighter(Unit):
-    def move(self, move_coords):
-        self.destination = move_coords
-        if self.destination[0] != self.coords[0] or self.destination != self.coords[1]:
-            vector = self.destination[0] - self.coords[0], self.destination[1] - self.coords[1]
-            if vector[0] != 0:
-                x = vector[0] // abs(vector[0])
-            else:
-                x = 0
-            if vector[1] != 0:
-                y = vector[1] // abs(vector[1])
-            else:
-                y = 0
-            near = [vector[0] % self.speed, vector[1] % self.speed]
-            for r in near:
-                if r == 0 and near.index(r) == 0:
-                    near[near.index(r)] = self.speed * x
-                elif r == 0:
-                    near[1] = self.speed * y
-            super().move(tuple(near))
+    pass
 
 
 class Main_Tower(Building):
@@ -246,8 +193,9 @@ class Wall(Building):
                 if self.board.tiles[self.coords[0] + h][self.coords[1] + w].drawn.__class__ == Wall:
                     if self.board.tiles[self.coords[0] + h][self.coords[1] + w].drawn.checked is False:
                         self.hp += ADDED
+                        if h != 0 and w != 0:
+                            self.board.tiles[self.coords[0] + w][self.coords[1] + h].drawn.pattern
                         self.board.tiles[self.coords[0] + h][self.coords[1] + w].drawn.checked = True
-                    self.board.tiles[self.coords[0] + w][self.coords[1] + h].drawn.pattern
 
 
 # to here needs testing!
