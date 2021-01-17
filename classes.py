@@ -118,8 +118,32 @@ class Unit(Entity):
         move_vector = move_vector[0] + self.coords[0], move_vector[1] + self.coords[1]
         self.set_pos(self.board, *move_vector)
 
-    def pattern(self):
-        pass
+    def pattern(self, near):
+        if near[1] < 0:
+            for h in range(near[1], 0, -1):
+                if near[0] < 0:
+                    for w in range(near[0], 0, -1):
+                        if self.can_go_to((self.coords[0] + w, self.coords[1] + h)):
+                            self.move_on_vector(w, h)
+                            return None
+                else:
+                    for w in range(near[0], 0, -1):
+                        if self.can_go_to((self.coords[0] + w, self.coords[1] + h)):
+                            self.move_on_vector(w, h)
+                            return None
+        else:
+            for h in range(near[1]):
+                if near[0] < 0:
+                    for w in range(near[0], 0, -1):
+                        if self.can_go_to((self.coords[0] + w, self.coords[1] + h)):
+                            self.move_on_vector(w, h)
+                            return None
+                else:
+                    for w in range(near[0], 0, -1):
+                        if self.can_go_to((self.coords[0] + w, self.coords[1] + h)):
+                            self.move_on_vector(w, h)
+                            return None
+        self.second_pattern()
 
     def second_pattern(self):
         pass
@@ -155,7 +179,7 @@ class Unit(Entity):
             if self.can_go_to(near):
                 self.move_on_vector(tuple(near))
             else:
-                self.pattern()
+                self.pattern(near)
 
 
 class Warrior(Unit):
@@ -221,7 +245,7 @@ class Projectile(Entity):
         pass
 
 
-class Arrow(Projectile):
+class Bullet(Projectile):
     def __init__(self, sheet, columns, rows, x, y, board, team, vx, vy, st_coords, piercing=0):
         super.__init__(sheet, columns, rows, x, y, board, team, vx, vy, st_coords)
         self.piercing = piercing
