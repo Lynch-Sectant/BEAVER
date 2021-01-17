@@ -155,7 +155,7 @@ class Unit(Entity):
         for h in range(self.coords[0], self.coords[0] + coords[0]):
             for w in range(self.coords[1], self.coords[1] + coords[1]):
                 if self.board.tiles[h][w].drawn is not None:
-                    if self.board.tiles[h][w].drawn.team != 'player':
+                    if self.board.tiles[h][w].drawn.team != self.team:
                         return False
 
     def move(self, move_coords):
@@ -201,7 +201,36 @@ class Main_Tower(Building):
 
 
 class Defense_Tower(Building):
-    pass
+    def __init__(self, sheet, columns, rows, x, y, board, team, hp):
+        super().__init__(sheet, columns, rows, x, y, board, team)
+        self.hp = hp
+        if self.team == 'player':
+            PLAYER_BUILDINGS.add(self)
+        else:
+            ENEMY_BUILDINGS.add(self)
+        self.target = None
+
+    def pattern(self, v_radius):
+        lens = {}
+        if self.target is None:
+            for h in range(-v_radius, v_radius):
+                for w in range(-v_radius, v_radius):
+                    lens[self.board.tiles[self.coords[1] + h][self.coords[0] + w].drawn] = ((self.coords[
+                                                                                                 1] + h) ** 2 + (
+                                                                                                    self.coords[
+                                                                                                        0] + w) ** 2) ** 0.5
+        elif not self.target.is_alive():
+            for h in range(-v_radius, v_radius):
+                for w in range(-v_radius, v_radius):
+                    lens[self.board.tiles[self.coords[1] + h][self.coords[0] + w].drawn] = ((self.coords[
+                                                                                                 1] + h) ** 2 + (
+                                                                                                    self.coords[
+                                                                                                        0] + w) ** 2) ** 0.5
+        for k in lens.keys():
+            if lens[k] == min(lens.values()):
+                self.target = k
+                self.attack()
+                return None
 
 
 # all code from here
