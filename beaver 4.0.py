@@ -10,9 +10,6 @@ def check(x, y, w, h, posx, posy):
 
 def load_image(name, colorkey=None):
     fullname = name
-    if not os.path.isfile(fullname):
-        print(f"Файл с изображением '{fullname}' не найден")
-        sys.exit()
     image = pygame.image.load(fullname)
     return image
 
@@ -51,8 +48,8 @@ if __name__ == '__main__':
                        WHERE id = (SELECT MAX(id) 
                        FROM sett)""").fetchall()
     result = str(result)
-    vieww = result.replace("[(", '')
-    vieww = int(str(fps).replace(',)]', ''))
+    vieww = result.replace("[('", '')
+    vieww = str(vieww).replace("',)]", '')
 
     if w == 800 and h == 600:
         flag = 1
@@ -168,9 +165,6 @@ if __name__ == '__main__':
                         pygame.draw.rect(screen, (255, 0, 0), (text_x4 - 10, text_y4 - 10, text_w4 + 20, text_h4 + 20),
                                          5)
 
-
-
-
                     if window_show == 2:
                         if check(text_x0 - 10, text_y0 - 10, text_w0 + 20, text_h0 + 20, event.pos[0],
                                 event.pos[1]):
@@ -178,7 +172,6 @@ if __name__ == '__main__':
                         elif check(text_x1 - 10, text_y1 - 10, text_w1 + 20, text_h1 + 20, event.pos[0],
                                        event.pos[1]):
                             vieww = '1600, 1200'
-                            print(0)
                         elif check(text_x3 - 10, text_y3 - 10, text_w3 + 20, text_h3 + 20, event.pos[0],
                                        event.pos[1]):
                             fps = 30
@@ -203,6 +196,21 @@ if __name__ == '__main__':
 
                     if check(690, 510, 100, 90, event.pos[0], event.pos[1]) and window_show == 1:
                         print('play')
+
+                    if check(690, 0, 100, 100, event.pos[0], event.pos[1]) and window_show == 1:
+                        screen.fill((0, 0, 0))
+                        font = pygame.font.Font(None, 50)
+                        text1 = font.render("Developers:", True, (255, 255, 100))
+                        text2 = font.render("Lynch-Sectant,", True, (255, 255, 100))
+                        text3 = font.render("Menyanesuschestvuet,", True, (255, 255, 100))
+                        text4 = font.render("Lesnichiy.", True, (255, 255, 100))
+                        text_xt = width - text.get_width() * 3
+                        text_yt = height - text.get_height() * 15
+                        screen.blit(text1, (text_xt, text_yt))
+                        screen.blit(text2, (text_xt, text_yt * 2))
+                        screen.blit(text3, (text_xt, text_yt * 3))
+                        screen.blit(text4, (text_xt, text_yt * 4))
+
 
                 elif flag == 2:
                     welcome(screen, 70, 5, 5)
@@ -320,6 +328,20 @@ if __name__ == '__main__':
 
                     if check(1380, 880, 150, 140, event.pos[0], event.pos[1]) and window_show == 1:
                         print('play')
+
+                    if check(1380, 200, 150, 150, event.pos[0], event.pos[1]) and window_show == 1:
+                        screen.fill((0, 0, 0))
+                        font = pygame.font.Font(None, 70)
+                        text1 = font.render("Developers:", True, (255, 255, 100))
+                        text2 = font.render("Lynch-Sectant,", True, (255, 255, 100))
+                        text3 = font.render("Menyanesuschestvuet,", True, (255, 255, 100))
+                        text4 = font.render("Lesnichiy.", True, (255, 255, 100))
+                        text_xt = width - text.get_width() * 6
+                        text_yt = height - text.get_height() * 28
+                        screen.blit(text1, (text_xt, text_yt))
+                        screen.blit(text2, (text_xt, text_yt * 2))
+                        screen.blit(text3, (text_xt, text_yt * 3))
+                        screen.blit(text4, (text_xt, text_yt * 4))
 
         pygame.display.flip()
 pygame.quit()
