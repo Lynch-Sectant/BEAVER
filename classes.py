@@ -1,13 +1,25 @@
-import pygame
+import os
 
-PAUSE = True
+import pygame
+import sqlite3
+
+
 CHOSEN_ENTITY = None
+FPS = 60
 all_sprites = pygame.sprite.Group()
 PLAYER_UNITS = pygame.sprite.Group()
 ENEMY_UNITS = pygame.sprite.Group()
 ADDED = 0
-METHACASH = 0
+METHACASH = 50
 METHACASH_ADDED = 0
+ENEMY_METHACASH = 50
+ENEMY_METHACASH_ADDED = 0
+PLAYER_COLOR = 1
+ENEMY_COLOR = 2
+SCORE = 0
+running = True
+edit_mode = True
+CHOSEN_ENTITY = None
 
 
 class Tile:
@@ -202,3 +214,90 @@ class Arrow(Projectile):
 class Cloud(Projectile):
     def pattern(self):
         pass
+  
+
+life_board = Board(49, 49)
+
+
+def methacash(width, height, color):
+    global life_board, METHACASH_ADDED, METHACASH, ENEMY_METHACASH, ENEMY_METHACASH_ADDED, edit_mode, SCORE
+    pygame.time.wait(20000)
+    for i in range(height):
+        for j in (width):
+            if life_board[j, i] is Building():
+                if Building.get_color == PLAYER_COLOR:
+                    if life_board[j, i] is Farm():
+                        METHACASH_ADDED += 5
+                    elif life_board[j, i] is Main_Tower():
+                        METHACASH_ADDED += 10
+                elif Building.get_color == ENEMY_COLOR:
+                    if life_board[j, i] is Farm():
+                        ENEMY_METHACASH_ADDED += 5
+                    elif life_board[j, i] is Main_Tower():
+                        ENEMY_METHACASH_ADDED += 10
+        edit_mode = True
+        METHACASH += METHACASH_ADDED
+        ENEMY_METHACASH += ENEMY_METHACASH_ADDED
+        SCORE += METHACASH_ADDED
+        METHACASH_ADDED = 0
+
+def record(win):
+    global SCORE
+    con = sqlite3.connect('Records.db')
+    cur = con.cursor()
+    if win == True:
+        cur.execute(f'''INSERT INTO Records (Status, Score) VALUES ('VICTORY',{SCORE})''')
+    else:
+        cur.execute(f'''INSERT INTO Records VALUES ('DEFEAT',{SCORE})''')
+    con.commit()
+
+
+fullname = os.path.join('data', name)
+
+
+pygame.init()
+
+size = width, height = (1000, 1000)
+screen = pygame.display.set_mode(size)
+
+NEXT_MOVE = pygame.USEREVENT + 1
+pygame.time.set_timer(NEXT_MOVE, 100)
+
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        if event.type == pygame.MOUSEBUTTONDOWN and edit_mode:
+            life_board.get_click(event.pos)
+        while edit_mode:
+            if event.type == pygame.KEYDOWN:
+                if event.type == pygame.K_e:
+                    CHOSEN_ENTITY = Warrior()
+                if event.type == pygame.K_r:
+                    CHOSEN_ENTITY = Archer()
+                if event.type == pygame.K_w:
+                    CHOSEN_ENTITY = Gasfighter()
+                if event.type == pygame.K_a:
+                    CHOSEN_ENTITY = Farm()
+                if event.type == pygame.K_s:
+                    CHOSEN_ENTITY = Attack_Tower()
+                if event.type == pygame.K_i:
+                    CHOSEN_ENTITY = Wall()
+                if event.type == pygame.K_KP_ENTER:
+                    edit_mode = False
+        while not edit_mode:
+            for i in range(height):
+                for j in range(width):
+                    if life_board[i][j] is Entity():
+                        pass
+                    elif life_board[i][j] is Building():
+                        pass
+                    elif life_board[i][j] is Projectile():
+                        pass
+
+    screen.fill((0, 0, 0))
+    life_board.render(screen)
+    pygame.display.flip()
+    clock.tick(FPS)
+
+pygame.quit()
