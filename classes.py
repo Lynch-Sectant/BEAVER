@@ -3,7 +3,6 @@ import os
 import pygame
 import sqlite3
 
-
 CHOSEN_ENTITY = None
 FPS = 60
 all_sprites = pygame.sprite.Group()
@@ -214,7 +213,7 @@ class Arrow(Projectile):
 class Cloud(Projectile):
     def pattern(self):
         pass
-  
+
 
 life_board = Board(49, 49)
 
@@ -241,18 +240,16 @@ def methacash(width, height, color):
         SCORE += METHACASH_ADDED
         METHACASH_ADDED = 0
 
+
 def record(win):
     global SCORE
     con = sqlite3.connect('Records.db')
     cur = con.cursor()
-    if win == True:
+    if win:
         cur.execute(f'''INSERT INTO Records (Status, Score) VALUES ('VICTORY',{SCORE})''')
     else:
         cur.execute(f'''INSERT INTO Records VALUES ('DEFEAT',{SCORE})''')
     con.commit()
-
-
-fullname = os.path.join('data', name)
 
 
 pygame.init()
