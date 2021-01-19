@@ -1,6 +1,5 @@
 import pygame
 import sqlite3
-import os
 import sys
 
 
@@ -8,10 +7,12 @@ def check(x, y, w, h, posx, posy):
     if x <= posx <= w + x and y <= posy <= h + y:
         return True
 
+
 def load_image(name, colorkey=None):
     fullname = name
     image = pygame.image.load(fullname)
     return image
+
 
 def welcome(screen, pp, bb, a):
     screen.fill((0, 0, 0))
@@ -45,8 +46,8 @@ if __name__ == '__main__':
     fps = int(str(fps).replace(',)]', ''))
 
     result = cur.execute("""SELECT view FROM sett
-                       WHERE id = (SELECT MAX(id) 
-                       FROM sett)""").fetchall()
+                           WHERE id = (SELECT MAX(id) 
+                           FROM sett)""").fetchall()
     result = str(result)
     vieww = result.replace("[('", '')
     vieww = str(vieww).replace("',)]", '')
@@ -80,7 +81,7 @@ if __name__ == '__main__':
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
 
-                if flag == 1:
+                if flag == 1 and window_show == 1:
                     welcome(screen, 50, 3, 4.3)
                     fon = pygame.transform.scale(load_image('playbtn.jpg'), (100, 90))
                     screen.blit(fon, (690, 510))
@@ -158,73 +159,81 @@ if __name__ == '__main__':
                         font = pygame.font.Font(None, 50)
                         text = font.render("ACCEPT", True, (255, 255, 100))
                         text_x4 = width - text.get_width() * 1.5
-                        text_y4 = height - text.get_height() * 2
+                        text_y4 = height - text.get_height() * 4
                         screen.blit(text, (text_x4, text_y4))
                         text_w4 = text.get_width()
                         text_h4 = text.get_height()
                         pygame.draw.rect(screen, (255, 0, 0), (text_x4 - 10, text_y4 - 10, text_w4 + 20, text_h4 + 20),
                                          5)
 
-                    if window_show == 2:
-                        if check(text_x0 - 10, text_y0 - 10, text_w0 + 20, text_h0 + 20, event.pos[0],
-                                event.pos[1]):
-                            vieww = '800, 600'
-                        elif check(text_x1 - 10, text_y1 - 10, text_w1 + 20, text_h1 + 20, event.pos[0],
-                                       event.pos[1]):
-                            vieww = '1600, 1200'
-                        elif check(text_x3 - 10, text_y3 - 10, text_w3 + 20, text_h3 + 20, event.pos[0],
-                                       event.pos[1]):
-                            fps = 30
-                        elif check(text_x2 - 10, text_y2 - 10, text_w2 + 20, text_h2 + 20, event.pos[0],
-                                       event.pos[1]):
-                            fps = 60
-                        elif check(text_x5 - 10, text_y5 - 10, text_w5 + 20, text_h5 + 20, event.pos[0],
-                                       event.pos[1]):
-                            fps = 45
-
-                        if check(text_x4 - 10, text_y4 - 10, text_w4 + 20, text_h4 + 20, event.pos[0],
-                                     event.pos[1]):
-                            con = sqlite3.connect("settings.db")
-                            cur = con.cursor()
-                            cur.execute(
-                                    """INSERT INTO sett(view, FPS) VALUES('{}', '{}')""".format(vieww, fps))
-                            con.commit()
-                            window_show = 1
-
-                    if check(10, 500, 100, 100, event.pos[0], event.pos[1]) and window_show == 1:
-                        running = False
-
-                    if check(690, 510, 100, 90, event.pos[0], event.pos[1]) and window_show == 1:
-                        print('play')
-
-                    if check(690, 0, 100, 100, event.pos[0], event.pos[1]) and window_show == 1:
-                        screen.fill((0, 0, 0))
-                        font = pygame.font.Font(None, 50)
-                        text1 = font.render("Developers:", True, (255, 255, 100))
-                        text2 = font.render("Lynch-Sectant,", True, (255, 255, 100))
-                        text3 = font.render("Menyanesuschestvuet,", True, (255, 255, 100))
-                        text4 = font.render("Lesnichiy.", True, (255, 255, 100))
-                        text_xt = width - text.get_width() * 3
-                        text_yt = height - text.get_height() * 15
-                        screen.blit(text1, (text_xt, text_yt))
-                        screen.blit(text2, (text_xt, text_yt * 2))
-                        screen.blit(text3, (text_xt, text_yt * 3))
-                        screen.blit(text4, (text_xt, text_yt * 4))
+                elif window_show == 2:
+                    if check(text_x0 - 10, text_y0 - 10, text_w0 + 20, text_h0 + 20, event.pos[0],
+                             event.pos[1]):
+                        vieww = '800, 600'
+                    elif check(text_x1 - 10, text_y1 - 10, text_w1 + 20, text_h1 + 20, event.pos[0],
+                               event.pos[1]):
+                        vieww = '1600, 1200'
+                    elif check(text_x3 - 10, text_y3 - 10, text_w3 + 20, text_h3 + 20, event.pos[0],
+                               event.pos[1]):
+                        fps = 30
+                    elif check(text_x2 - 10, text_y2 - 10, text_w2 + 20, text_h2 + 20, event.pos[0],
+                               event.pos[1]):
+                        fps = 60
+                    elif check(text_x5 - 10, text_y5 - 10, text_w5 + 20, text_h5 + 20, event.pos[0],
+                               event.pos[1]):
+                        fps = 45
+                    elif check(text_x4 - 10, text_y4 - 10, text_w4 + 20, text_h4 + 20, event.pos[0],
+                             event.pos[1]):
+                        con = sqlite3.connect("settings.db")
+                        cur = con.cursor()
+                        cur.execute(
+                            """INSERT INTO sett(view, FPS) VALUES('{}', '{}')""".format(vieww, fps))
+                        con.commit()
+                        window_show = 1
 
 
-                elif flag == 2:
+                if check(10, 500, 100, 100, event.pos[0], event.pos[1]) and window_show == 1:
+                    running = False
+
+                if check(690, 510, 100, 90, event.pos[0], event.pos[1]) and window_show == 1:
+                    print('play')
+
+                if check(690, 0, 100, 100, event.pos[0], event.pos[1]) and window_show == 1:
+                    screen.fill((0, 0, 0))
+                    font = pygame.font.Font(None, 50)
+                    text1 = font.render("Developers:", True, (255, 255, 100))
+                    text2 = font.render("Lynch-Sectant,", True, (255, 255, 100))
+                    text3 = font.render("Menyanesuschestvuet,", True, (255, 255, 100))
+                    text4 = font.render("Lesnichiy.", True, (255, 255, 100))
+                    text_xt = width - text.get_width() * 3
+                    text_yt = height - text.get_height() * 15
+                    screen.blit(text1, (text_xt, text_yt))
+                    screen.blit(text2, (text_xt, text_yt * 2))
+                    screen.blit(text3, (text_xt, text_yt * 3))
+                    screen.blit(text4, (text_xt, text_yt * 4))
+                    fon = pygame.transform.scale(load_image('history.jpg'), (150, 150))
+                    screen.blit(fon, (600, 200))
+                    window_show = 3
+
+                if check(600, 200, 150, 150, event.pos[0], event.pos[1]) and window_show == 3:
+                    screen.fill((0, 0, 0))
+                    fon = pygame.transform.scale(load_image('lor.jpg'), (800, 600))
+                    screen.blit(fon, (0, 0))
+                    window_show = 1
+
+                if flag == 2 and window_show == 1:
                     welcome(screen, 70, 5, 5)
                     fon = pygame.transform.scale(load_image('playbtn.jpg'), (150, 140))
-                    screen.blit(fon, (1380, 880))
+                    screen.blit(fon, (1420, 890))
 
                     fon = pygame.transform.scale(load_image('settingsbtn.jpg'), (150, 150))
                     screen.blit(fon, (50, 200))
 
                     fon = pygame.transform.scale(load_image('exit.jpg'), (150, 150))
-                    screen.blit(fon, (50, 880))
+                    screen.blit(fon, (50, 890))
 
                     fon = pygame.transform.scale(load_image('info.jpg'), (150, 150))
-                    screen.blit(fon, (1380, 200))
+                    screen.blit(fon, (1420, 200))
 
                     if check(50, 200, 150, 150, event.pos[0], event.pos[1]):
                         window_show = 2
@@ -297,51 +306,60 @@ if __name__ == '__main__':
                         pygame.draw.rect(screen, (255, 0, 0), (text_x4 - 10, text_y4 - 10, text_w4 + 20, text_h4 + 20),
                                          5)
 
-                    if window_show == 2:
-                        if check(text_x0 - 10, text_y0 - 10, text_w0 + 20, text_h0 + 20, event.pos[0],
-                                 event.pos[1]):
-                            vieww = '800, 600'
-                        elif check(text_x1 - 10, text_y1 - 10, text_w1 + 20, text_h1 + 20, event.pos[0],
-                                   event.pos[1]):
-                            vieww = '1600, 1200'
-                        elif check(text_x3 - 10, text_y3 - 10, text_w3 + 20, text_h3 + 20, event.pos[0],
-                                   event.pos[1]):
-                            fps = 30
-                        elif check(text_x2 - 10, text_y2 - 10, text_w2 + 20, text_h2 + 20, event.pos[0],
-                                   event.pos[1]):
-                            fps = 60
-                        elif check(text_x5 - 10, text_y5 - 10, text_w5 + 20, text_h5 + 20, event.pos[0],
-                                   event.pos[1]):
-                            fps = 45
+                elif window_show == 2:
+                    if check(text_x0 - 10, text_y0 - 10, text_w0 + 20, text_h0 + 20, event.pos[0],
+                         event.pos[1]):
+                        vieww = '800, 600'
+                    elif check(text_x1 - 10, text_y1 - 10, text_w1 + 20, text_h1 + 20, event.pos[0],
+                           event.pos[1]):
+                        vieww = '1600, 1200'
+                    elif check(text_x3 - 10, text_y3 - 10, text_w3 + 20, text_h3 + 20, event.pos[0],
+                           event.pos[1]):
+                        fps = 30
+                    elif check(text_x2 - 10, text_y2 - 10, text_w2 + 20, text_h2 + 20, event.pos[0],
+                           event.pos[1]):
+                        fps = 60
+                    elif check(text_x5 - 10, text_y5 - 10, text_w5 + 20, text_h5 + 20, event.pos[0],
+                           event.pos[1]):
+                        fps = 45
 
-                        if check(text_x4 - 10, text_y4 - 10, text_w4 + 20, text_h4 + 20, event.pos[0],
-                                 event.pos[1]):
-                            con = sqlite3.connect("settings.db")
-                            cur = con.cursor()
-                            cur.execute(
-                                """INSERT INTO sett(view, FPS) VALUES('{}', '{}')""".format(vieww, fps))
-                            con.commit()
-                            window_show = 1
+                    elif check(text_x4 - 10, text_y4 - 10, text_w4 + 20, text_h4 + 20, event.pos[0],
+                         event.pos[1]):
+                        con = sqlite3.connect("settings.db")
+                        cur = con.cursor()
+                        cur.execute(
+                        """INSERT INTO sett(view, FPS) VALUES('{}', '{}')""".format(vieww, fps))
+                        con.commit()
+                        window_show = 1
 
-                    if check(50, 880, 150, 150, event.pos[0], event.pos[1]) and window_show == 1:
-                        running = False
+                if check(50, 890, 150, 150, event.pos[0], event.pos[1]) and window_show == 1:
+                    running = False
 
-                    if check(1380, 880, 150, 140, event.pos[0], event.pos[1]) and window_show == 1:
-                        print('play')
+                if check(1420, 890, 150, 140, event.pos[0], event.pos[1]) and window_show == 1:
+                    print('play')
 
-                    if check(1380, 200, 150, 150, event.pos[0], event.pos[1]) and window_show == 1:
-                        screen.fill((0, 0, 0))
-                        font = pygame.font.Font(None, 70)
-                        text1 = font.render("Developers:", True, (255, 255, 100))
-                        text2 = font.render("Lynch-Sectant,", True, (255, 255, 100))
-                        text3 = font.render("Menyanesuschestvuet,", True, (255, 255, 100))
-                        text4 = font.render("Lesnichiy.", True, (255, 255, 100))
-                        text_xt = width - text.get_width() * 6
-                        text_yt = height - text.get_height() * 28
-                        screen.blit(text1, (text_xt, text_yt))
-                        screen.blit(text2, (text_xt, text_yt * 2))
-                        screen.blit(text3, (text_xt, text_yt * 3))
-                        screen.blit(text4, (text_xt, text_yt * 4))
+                if check(1420, 200, 150, 150, event.pos[0], event.pos[1]) and window_show == 1:
+                    screen.fill((0, 0, 0))
+                    font = pygame.font.Font(None, 70)
+                    text1 = font.render("Developers:", True, (255, 255, 100))
+                    text2 = font.render("Lynch-Sectant,", True, (255, 255, 100))
+                    text3 = font.render("Menyanesuschestvuet,", True, (255, 255, 100))
+                    text4 = font.render("Lesnichiy.", True, (255, 255, 100))
+                    text_xt = width - text.get_width() * 6
+                    text_yt = height - text.get_height() * 28
+                    screen.blit(text1, (text_xt, text_yt))
+                    screen.blit(text2, (text_xt, text_yt * 2))
+                    screen.blit(text3, (text_xt, text_yt * 3))
+                    screen.blit(text4, (text_xt, text_yt * 4))
+                    fon = pygame.transform.scale(load_image('history.jpg'), (250, 250))
+                    screen.blit(fon, (1000, 400))
+                    window_show = 3
+
+                if check(1000, 400, 250, 250, event.pos[0], event.pos[1]) and window_show == 3:
+                    screen.fill((0, 0, 0))
+                    fon = pygame.transform.scale(load_image('lor.jpg'), (1600, 1200))
+                    screen.blit(fon, (0, 50))
+                    window_show = 1
 
         pygame.display.flip()
 pygame.quit()
