@@ -1,4 +1,4 @@
-import os
+import random
 
 import pygame
 import sqlite3
@@ -270,25 +270,34 @@ while running:
             if event.type == pygame.KEYDOWN:
                 if event.type == pygame.K_e:
                     CHOSEN_ENTITY = Warrior()
-                if event.type == pygame.K_r:
+                elif event.type == pygame.K_r:
                     CHOSEN_ENTITY = Archer()
-                if event.type == pygame.K_w:
+                elif event.type == pygame.K_w:
                     CHOSEN_ENTITY = Gasfighter()
-                if event.type == pygame.K_a:
+                elif event.type == pygame.K_a:
                     CHOSEN_ENTITY = Farm()
-                if event.type == pygame.K_s:
+                elif event.type == pygame.K_s:
                     CHOSEN_ENTITY = Attack_Tower()
-                if event.type == pygame.K_i:
+                elif event.type == pygame.K_i:
                     CHOSEN_ENTITY = Wall()
-                if event.type == pygame.K_KP_ENTER:
+                elif event.type == pygame.K_KP_ENTER:
                     edit_mode = False
+                if event.type == pygame.MOUSEBUTTONUP:
+                    CHOSEN_ENTITY.spawn(event.pos, PLAYER_COLOR)
+            for i in range(height):
+                for j in range(width):
+                    if life_board[j][i] is None and methacash >= 5 and random.randint(0, 100) >= 75:
+                        random.choise(Warrior(), Archer()).spawn(i, j, ENEMY_COLOR)
+                    if life_board[j][i] is None and methacash >= 20 and random.randint(0, 100) >= 75:
+                        Gasfighter().spawn(i, j, ENEMY_COLOR)
+
         while not edit_mode:
             for i in range(height):
                 for j in range(width):
-                    if life_board[i][j] is Entity():
-                        pass
+                    if life_board[i][j] is Unit():
+                        life_board[i][j].pattern
                     elif life_board[i][j] is Building():
-                        pass
+                        life_board[i][j].pattern
                     elif life_board[i][j] is Projectile():
                         pass
 
