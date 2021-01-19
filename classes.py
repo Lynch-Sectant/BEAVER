@@ -7,6 +7,7 @@ PLAYER_UNITS = pygame.sprite.Group()
 ENEMY_UNITS = pygame.sprite.Group()
 PLAYER_BUILDINGS = pygame.sprite.Group()
 ENEMY_BUILDINGS = pygame.sprite.Group()
+PROJECTILES = pygame.sprite.Group()
 ADDED = 0
 METHACASH = 0
 METHACASH_ADDED = 10
@@ -96,7 +97,20 @@ class Building(Entity):
             ENEMY_BUILDINGS.add(self)
 
     def pattern(self):
-        pass
+        if self.team == 'enemy' and len(pygame.sprite.spritecollide(self, Projectile)) > 0:
+            for k in pygame.sprite.spritecollide(self, Projectile):
+                if k.team == 'player':
+                    self.hp -= 1
+                    if self.hp <= 0:
+                        self.kill()
+                        return None
+        elif self.team == 'player' and len(pygame.sprite.spritecollide(self, Projectile)) > 0:
+            for k in pygame.sprite.spritecollide(self, Projectile):
+                if k.team == 'enemy':
+                    self.hp -= 1
+                    if self.hp <= 0:
+                        self.kill()
+                        return None
 
 
 class Unit(Entity):
@@ -146,7 +160,20 @@ class Unit(Entity):
         self.second_pattern()
 
     def second_pattern(self):
-        pass
+        if self.team == 'enemy' and len(pygame.sprite.spritecollide(self, Projectile)) > 0:
+            for k in pygame.sprite.spritecollide(self, Projectile):
+                if k.team == 'player':
+                    self.hp -= 1
+                    if self.hp <= 0:
+                        self.kill()
+                        return None
+        elif self.team == 'player' and len(pygame.sprite.spritecollide(self, Projectile)) > 0:
+            for k in pygame.sprite.spritecollide(self, Projectile):
+                if k.team == 'enemy':
+                    self.hp -= 1
+                    if self.hp <= 0:
+                        self.kill()
+                        return None
 
     def attack(self):
         pass
@@ -196,6 +223,7 @@ class GasFighter(Unit):
 
 class Main_Tower(Building):
     def pattern(self):
+        super().pattern()
         global METHACASH
         METHACASH += METHACASH_ADDED
 
@@ -211,6 +239,7 @@ class Defense_Tower(Building):
         self.target = None
 
     def pattern(self, v_radius):
+        super().pattern()
         lens = {}
         if self.target is None:
             for h in range(-v_radius, v_radius):
@@ -241,13 +270,14 @@ class Wall(Building):
         self.pattern()
 
     def pattern(self):
+        super.pattern()
         for h in range(-1, 2):
             for w in range(-1, 2):
                 if self.board.tiles[self.coords[0] + h][self.coords[1] + w].drawn.__class__ == Wall:
                     if self.board.tiles[self.coords[0] + h][self.coords[1] + w].drawn.checked is False:
                         self.hp += ADDED
                         if h != 0 and w != 0:
-                            self.board.tiles[self.coords[0] + w][self.coords[1] + h].drawn.pattern
+                            self.board.tiles[self.coords[0] + w][self.coords[1] + h].drawn.pattern()
                         self.board.tiles[self.coords[0] + h][self.coords[1] + w].drawn.checked = True
 
 
@@ -265,6 +295,7 @@ class Projectile(Entity):
         self.vx = vx
         self.vy = vy
         self.coords = st_coords
+        PROJECTILES.add(self)
 
     def move(self):
         self.coords = self.coords[0] + self.vx, self.coords[1] + self.vy
@@ -280,9 +311,29 @@ class Bullet(Projectile):
         self.piercing = piercing
 
     def pattern(self):
-        pass
+        if self.team == 'player' and len(pygame.sprite.spritecollide(self, ENEMY_UNITS)) > 0:
+            ENEMY_UNITS.second_pattern()
+            if self.piercing == 0:
+                self.kill()
+            else:
+                self.piercing -= 1
+        elif self.team == 'enemy' and len(pygame.sprite.spritecollide(self, PLAYER_UNITS)) > 0:
+            PLAYER_UNITS.second_pattern()
+            if self.piercing == 0:
+                self.kill()
+            else:
+                self.piercing -= 1
+        if pygame.sprite.spritecollideany(self, ENEMY_BUILDINGS) or pygame.sprite.spritecollideany(self,
+                                                                                                   ENEMY_BUILDINGS):
+            self.kill()
 
 
 class Cloud(Projectile):
     def pattern(self):
-        pass
+        if pygame.sprite.spritecollideany(self, ENEMY_BUILDINGS) or pygame.sprite.spritecollideany(self,
+                                                                                                   ENEMY_BUILDINGS):
+            self.kill()
+        elif self.team == 'player' and len(pygame.sprite.spritecollide(self, ENEMY_UNITS)) > 0:
+            ENEMY_UNITS.second_pattern()
+        elif self.team == 'enemy' and len(pygame.sprite.spritecollide(self, PLAYER_UNITS)) > 0:
+            PLAYER_UNITS.second_pattern()
