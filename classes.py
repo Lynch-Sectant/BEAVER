@@ -122,6 +122,7 @@ class Unit(Entity):
         self.dmg = dmg
         self.vision_radius = vision_radius
         self.destination = self.coords
+        self.target = None
         if self.team == 'player':
             PLAYER_UNITS.add(self)
         else:
@@ -175,7 +176,7 @@ class Unit(Entity):
                         self.kill()
                         return None
 
-    def attack(self):
+    def attack(self, enemy):
         pass
 
     def can_go_to(self, coords):
@@ -184,6 +185,71 @@ class Unit(Entity):
                 if self.board.tiles[h][w].drawn is not None:
                     if self.board.tiles[h][w].drawn.team != self.team:
                         return False
+
+    def move(self, move_coords):
+        if self.target == None:
+            self.destination = move_coords
+        else:
+            self.destination = self.target.coords
+        if self.destination[0] != self.coords[0] or self.destination != self.coords[1]:
+            vector = self.destination[0] - self.coords[0], self.destination[1] - self.coords[1]
+            if vector[0] != 0:
+                x = vector[0] // abs(vector[0])
+            else:
+                x = 0
+            if vector[1] != 0:
+                y = vector[1] // abs(vector[1])
+            else:
+                y = 0
+            near = [vector[0] % self.speed, vector[1] % self.speed]
+            for r in near:
+                if r == 0 and near.index(r) == 0:
+                    near[near.index(r)] = self.speed * x
+                elif r == 0:
+                    near[1] = self.speed * y
+            if self.can_go_to(near):
+                self.move_on_vector(tuple(near))
+            else:
+                self.pattern(near)
+
+
+class Trooper(Unit):
+    def second_pattern(self):
+        super().second_pattern()
+        minim = (self.vision_radius + 1, None)
+        for i in range(-self.vision_radius, self.vision_radius):
+            for j in range(-self.vision_radius, self.vision_radius):
+                if self.board.tiles[i][j].drawn is not None:
+                    if ENEMY_UNITS in self.board.tiles[i][j].drawn.groups() or ENEMY_BUILDINGS in self.board.tiles[i][
+                        j].drawn.groups() and self.team == 'player':
+                        if ((i + j) / 2 + 0.5) // 1 == 1:
+                            self.target = self.board.tiles[i][j].drawn
+                            self.attack(self.board.tiles[i][j].drawn)
+                            return None
+                        elif ((i + j) / 2 + 0.5) // 1 < minim[0]:
+                            minim = (((i + j) / 2 + 0.5) // 1 == 1, self.board.tiles[i][j].drawn)
+        self.target = minim[1]
+        self.move(minim[1].coords)
+
+
+class Sniper(Unit):
+    def second_pattern(self):
+        super().second_pattern()
+        minim = (self.vision_radius + 1, None)
+        for i in range(-self.vision_radius, self.vision_radius):
+            for j in range(-self.vision_radius, self.vision_radius):
+                if self.board.tiles[i][j].drawn is not None:
+                    if ENEMY_UNITS in self.board.tiles[i][j].drawn.groups() or ENEMY_BUILDINGS in self.board.tiles[i][
+                        j].drawn.groups() and self.team == 'player':
+                        if ((i + j) / 2 + 0.5) // 1 == 1:
+                            self.move(self.coords[0] - i, self.coords[1] - j)
+                            self.target = self.board.tiles[i][j].drawn
+                            self.attack(self.board.tiles[i][j].drawn)
+                            return None
+                        elif ((i + j) / 2 + 0.5) // 1 < minim[0]:
+                            minim = (((i + j) / 2 + 0.5) // 1 == 1, self.board.tiles[i][j].drawn)
+        self.target = minim[1]
+        self.move(minim[1].coords)
 
     def move(self, move_coords):
         self.destination = move_coords
@@ -209,16 +275,23 @@ class Unit(Entity):
                 self.pattern(near)
 
 
-class Warrior(Unit):
-    pass
-
-
-class Archer(Unit):
-    pass
-
-
 class GasFighter(Unit):
-    pass
+    def second_pattern(self):
+        super().second_pattern()
+        minim = (self.vision_radius + 1, None)
+        for i in range(-self.vision_radius, self.vision_radius):
+            for j in range(-self.vision_radius, self.vision_radius):
+                if self.board.tiles[i][j].drawn is not None:
+                    if ENEMY_UNITS in self.board.tiles[i][j].drawn.groups() or ENEMY_BUILDINGS in self.board.tiles[i][
+                        j].drawn.groups() and self.team == 'player':
+                        if ((i + j) / 2 + 0.5) // 1 == 1:
+                            self.target = self.board.tiles[i][j].drawn
+                            self.attack(self.board.tiles[i][j].drawn)
+                            return None
+                        elif ((i + j) / 2 + 0.5) // 1 < minim[0]:
+                            minim = (((i + j) / 2 + 0.5) // 1 == 1, self.board.tiles[i][j].drawn)
+        self.target = minim[1]
+        self.move(minim[1].coords)
 
 
 class Main_Tower(Building):
@@ -244,17 +317,11 @@ class Defense_Tower(Building):
         if self.target is None:
             for h in range(-v_radius, v_radius):
                 for w in range(-v_radius, v_radius):
-                    lens[self.board.tiles[self.coords[1] + h][self.coords[0] + w].drawn] = ((self.coords[
-                                                                                                 1] + h) ** 2 + (
-                                                                                                    self.coords[
-                                                                                                        0] + w) ** 2) ** 0.5
+                    lens[self.board.tiles[self.coords[1] + h][self.coords[0] + w].drawn] = ((w + h) / 2 + 0.5) // 1
         elif not self.target.is_alive():
             for h in range(-v_radius, v_radius):
                 for w in range(-v_radius, v_radius):
-                    lens[self.board.tiles[self.coords[1] + h][self.coords[0] + w].drawn] = ((self.coords[
-                                                                                                 1] + h) ** 2 + (
-                                                                                                    self.coords[
-                                                                                                        0] + w) ** 2) ** 0.5
+                    lens[self.board.tiles[self.coords[1] + h][self.coords[0] + w].drawn] = ((w + h) / 2 + 0.5) // 1
         for k in lens.keys():
             if lens[k] == min(lens.values()):
                 self.target = k
