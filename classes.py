@@ -223,16 +223,16 @@ def methacash(width, height, color):
     pygame.time.wait(20000)
     for i in range(height):
         for j in (width):
-            if life_board[j, i] is Building():
+            if life_board.get_tile(j, i) is Building():
                 if Building.get_color == PLAYER_COLOR:
-                    if life_board[j, i] is Farm():
+                    if life_board.get_tile(j, i) is Farm():
                         METHACASH_ADDED += 5
-                    elif life_board[j, i] is Main_Tower():
+                    elif life_board.get_tile(j, i) is Main_Tower():
                         METHACASH_ADDED += 10
                 elif Building.get_color == ENEMY_COLOR:
-                    if life_board[j, i] is Farm():
+                    if life_board.get_tile(j, i) is Farm():
                         ENEMY_METHACASH_ADDED += 5
-                    elif life_board[j, i] is Main_Tower():
+                    elif life_board.get_tile(j, i) is Main_Tower():
                         ENEMY_METHACASH_ADDED += 10
         edit_mode = True
         METHACASH += METHACASH_ADDED
@@ -269,9 +269,9 @@ while running:
         while edit_mode:
             if event.type == pygame.KEYDOWN:
                 if event.type == pygame.K_e:
-                    CHOSEN_ENTITY = Warrior()
+                    CHOSEN_ENTITY = Trooper()
                 elif event.type == pygame.K_r:
-                    CHOSEN_ENTITY = Archer()
+                    CHOSEN_ENTITY = Sniper()
                 elif event.type == pygame.K_w:
                     CHOSEN_ENTITY = Gasfighter()
                 elif event.type == pygame.K_a:
@@ -286,19 +286,19 @@ while running:
                     CHOSEN_ENTITY.spawn(event.pos, PLAYER_COLOR)
             for i in range(height):
                 for j in range(width):
-                    if life_board[j][i] is None and methacash >= 5 and random.randint(0, 100) >= 75:
+                    if life_board.get_tile(j, i) is None and methacash >= 5 and random.randint(0, 100) >= 75:
                         random.choise(Warrior(), Archer()).spawn(i, j, ENEMY_COLOR)
-                    if life_board[j][i] is None and methacash >= 20 and random.randint(0, 100) >= 75:
+                    if life_board.get_tile(j, i) is None and methacash >= 20 and random.randint(0, 100) >= 75:
                         Gasfighter().spawn(i, j, ENEMY_COLOR)
 
         while not edit_mode:
             for i in range(height):
                 for j in range(width):
-                    if life_board[i][j] is Unit():
-                        life_board[i][j].pattern
-                    elif life_board[i][j] is Building():
-                        life_board[i][j].pattern
-                    elif life_board[i][j] is Projectile():
+                    if life_board.get_tile(j, i) is Unit():
+                        life_board.get_tile(j, i).pattern()
+                    elif life_board.get_tile(j, i) is Building():
+                        life_board.get_tile(j, i).pattern
+                    elif life_board.get_tile(j, i) is Projectile():
                         pass
 
     screen.fill((0, 0, 0))
