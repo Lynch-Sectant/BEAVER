@@ -224,12 +224,18 @@ class Trooper(Unit):
                         j].drawn.groups() and self.team == 'player':
                         if ((i + j) / 2 + 0.5) // 1 == 1:
                             self.target = self.board.tiles[i][j].drawn
-                            self.attack(self.board.tiles[i][j].drawn)
+                            self.attack(self.target)
                             return None
                         elif ((i + j) / 2 + 0.5) // 1 < minim[0]:
                             minim = (((i + j) / 2 + 0.5) // 1 == 1, self.board.tiles[i][j].drawn)
         self.target = minim[1]
         self.move(minim[1].coords)
+
+    def attack(self, enemy):
+        if enemy is None:
+            return None
+        else:
+            enemy.hp -= 1
 
 
 class Sniper(Unit):
@@ -244,7 +250,7 @@ class Sniper(Unit):
                         if ((i + j) / 2 + 0.5) // 1 == 1:
                             self.move(self.coords[0] - i, self.coords[1] - j)
                             self.target = self.board.tiles[i][j].drawn
-                            self.attack(self.board.tiles[i][j].drawn)
+                            self.attack(self.target)
                             return None
                         elif ((i + j) / 2 + 0.5) // 1 < minim[0]:
                             minim = (((i + j) / 2 + 0.5) // 1 == 1, self.board.tiles[i][j].drawn)
