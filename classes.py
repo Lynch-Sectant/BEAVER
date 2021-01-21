@@ -452,8 +452,9 @@ class Cloud(Projectile):
 life_board = Board(49, 49)
 
 
-def methacash(width, height, color):
+def methacash(width, height):
     global life_board, METHACASH_ADDED, METHACASH, ENEMY_METHACASH, ENEMY_METHACASH_ADDED, edit_mode, SCORE
+    added = 0
     pygame.time.wait(20000)
     for i in range(height):
         for j in (width):
@@ -469,10 +470,9 @@ def methacash(width, height, color):
                     elif life_board.get_tile(j, i) is Main_Tower():
                         life_board.get_tile(j, i).pattern()
         edit_mode = True
-        METHACASH += METHACASH_ADDED
-        ENEMY_METHACASH += ENEMY_METHACASH_ADDED
-        SCORE += METHACASH_ADDED
-        METHACASH_ADDED = 0
+        added += METHACASH
+        SCORE += added
+        added = 0
 
 
 def record(win):
@@ -526,6 +526,7 @@ while running:
                         Gasfighter().spawn([i, j], ENEMY_COLOR)
 
         while not edit_mode:
+            methacash(49, 49)
             for i in range(height):
                 for j in range(width):
                     if life_board.tiles[j][i].drawn() is Unit():
