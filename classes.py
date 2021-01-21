@@ -460,14 +460,14 @@ def methacash(width, height, color):
             if life_board.get_tile(j, i) is Building():
                 if Building.get_color == PLAYER_COLOR:
                     if life_board.get_tile(j, i) is Farm():
-                        METHACASH_ADDED += 5
+                        life_board.get_tile(j, i).pattern()
                     elif life_board.get_tile(j, i) is Main_Tower():
-                        METHACASH_ADDED += 10
+                        life_board.get_tile(j, i).pattern()
                 elif Building.get_color == ENEMY_COLOR:
                     if life_board.get_tile(j, i) is Farm():
-                        ENEMY_METHACASH_ADDED += 5
+                        life_board.get_tile(j, i).pattern()
                     elif life_board.get_tile(j, i) is Main_Tower():
-                        ENEMY_METHACASH_ADDED += 10
+                        life_board.get_tile(j, i).pattern()
         edit_mode = True
         METHACASH += METHACASH_ADDED
         ENEMY_METHACASH += ENEMY_METHACASH_ADDED
@@ -529,11 +529,12 @@ while running:
             for i in range(height):
                 for j in range(width):
                     if life_board.tiles[j][i].drawn() is Unit():
+                        life_board.move(ENEMY_COORDS)
                         life_board.tiles[j][i].pattern()
                     if life_board.tiles[j][i].drawn() is Building():
                         life_board.tiles[j][i].pattern()
                     if life_board.tiles[j][i].drawn() is Projectile():
-                        pass
+                        life_board.tiles[j][i].pattern()
 
 
     screen.fill((0, 0, 0))
