@@ -23,6 +23,7 @@ running = True
 edit_mode = True
 CHOSEN_ENTITY = None
 
+
 class Tile:
     def __init__(self):
         self.color = pygame.Color('black')
@@ -73,7 +74,7 @@ class Board:
 
 
 class Entity(pygame.sprite.Sprite):
-    def __init__(self, sheet, columns, rows, x, y, board, team):
+    def __init__(self, sheet, x, y, board, team, rows=0, columns=0):
         super().__init__(all_sprites)
         self.frames = []
         self.cut_sheet(sheet, columns, rows)
@@ -98,8 +99,8 @@ class Entity(pygame.sprite.Sprite):
 
 
 class Building(Entity):
-    def __init__(self, sheet, columns, rows, x, y, board, team, hp):
-        super().__init__(sheet, columns, rows, x, y, board, team)
+    def __init__(self, sheet, x, y, board, team, hp):
+        super().__init__(sheet, x, y, board, team)
         self.hp = hp
         if self.team == 'player':
             PLAYER_BUILDINGS.add(self)
@@ -124,8 +125,8 @@ class Building(Entity):
 
 
 class Unit(Entity):
-    def __init__(self, sheet, columns, rows, x, y, board, price, speed, hp, dmg, vision_radius, team):
-        super().__init__(sheet, columns, rows, x, y, board, team)
+    def __init__(self, sheet, x, y, board, price, speed, hp, dmg, vision_radius, team):
+        super().__init__(sheet, x, y, board, team)
         self.price = price
         self.speed = speed
         self.hp = hp
@@ -245,8 +246,8 @@ class Trooper(Unit):
         if enemy is None:
             return None
         else:
-            enemy.hp -= 1
-            if enemy.hp == 0:
+            enemy.hp -= self.dmg
+            if enemy.hp <= 0:
                 self.target == None
 
 
@@ -291,8 +292,11 @@ class Sniper(Unit):
                 self.move_on_vector(tuple(near))
             else:
                 self.pattern(near)
+
     def attack(self, target):
-        bullet = Bullet("bullet.png", 0, 0, self.board, self.team, (self.coords[0]-target.coords[0])*self.board.tile_size, (self.coords[1]-target.coords[1])*self.board.tile_size, (self.rect.x, self.rect.y))
+        bullet = Bullet("bullet.png", 0, 0, self.board, self.team,
+                        (self.coords[0] - target.coords[0]) * self.board.tile_size,
+                        (self.coords[1] - target.coords[1]) * self.board.tile_size, (self.rect.x, self.rect.y))
         bullet.move()
         bullet.kill()
 
@@ -314,8 +318,11 @@ class GasFighter(Unit):
                             minim = (((i + j) / 2 + 0.5) // 1 == 1, self.board.tiles[i][j].drawn)
         self.target = minim[1]
         self.move(minim[1].coords)
+
     def attack(self, target):
-        bullet = Cloud("gas.jpeg", 0, 0, self.board, self.team, (self.coords[0]-self.target.coords[0])*self.board.tile_size, (self.coords[1]-self.target.coords[1])*self.board.tile_size, (self.rect.x, self.rect.y))
+        bullet = Cloud("gas.jpeg", 0, 0, self.board, self.team,
+                       (self.coords[0] - self.target.coords[0]) * self.board.tile_size,
+                       (self.coords[1] - self.target.coords[1]) * self.board.tile_size, (self.rect.x, self.rect.y))
         bullet.move()
 
 
@@ -327,8 +334,8 @@ class Main_Tower(Building):
 
 
 class Defense_Tower(Building):
-    def __init__(self, sheet, columns, rows, x, y, board, team, hp):
-        super().__init__(sheet, columns, rows, x, y, board, team)
+    def __init__(self, sheet, x, y, board, team, hp):
+        super().__init__(sheet, x, y, board, team)
         self.hp = hp
         if self.team == 'player':
             PLAYER_BUILDINGS.add(self)
@@ -352,16 +359,19 @@ class Defense_Tower(Building):
                 self.target = k
                 self.attack()
                 return None
+
     def attack(self):
-        bullet = Bullet("bullet.png", 0, 0, self.board, self.team, (self.coords[0]-self.target.coords[0])*self.board.tile_size, (self.coords[1]-self.target.coords[1])*self.board.tile_size, (self.rect.x, self.rect.y))
+        bullet = Bullet("bullet.png", 0, 0, self.board, self.team,
+                        (self.coords[0] - self.target.coords[0]) * self.board.tile_size,
+                        (self.coords[1] - self.target.coords[1]) * self.board.tile_size, (self.rect.x, self.rect.y))
         bullet.move()
         bullet.kill()
 
 
 # all code from here
 class Wall(Building):
-    def __init__(self, sheet, columns, rows, x, y, board, team, hp):
-        super().__init__(sheet, columns, rows, x, y, board, team, hp)
+    def __init__(self, sheet, x, y, board, team, hp):
+        super().__init__(sheet, x, y, board, team, hp)
         self.checked = False
         self.pattern()
 
@@ -386,8 +396,8 @@ class Farm(Building):
 
 
 class Projectile(Entity):
-    def __init__(self, sheet, columns, rows, x, y, board, team, vx, vy, st_coords):
-        super().__init__(self, sheet, columns, rows, x, y, board, team)
+    def __init__(self, sheet, x, y, board, team, vx, vy, st_coords):
+        super().__init__(self, sheet, x, y, board, team)
         self.vx = vx
         self.vy = vy
         self.coords = st_coords
@@ -436,7 +446,7 @@ class Cloud(Projectile):
         elif self.team == 'enemy' and len(pygame.sprite.spritecollide(self, PLAYER_UNITS)) > 0:
             PLAYER_UNITS.second_pattern()
 
- 
+
 life_board = Board(49, 49)
 
 
