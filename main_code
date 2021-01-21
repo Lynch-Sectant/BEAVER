@@ -844,8 +844,11 @@ while running:
     screen.fill((0, 0, 0))
     life_board.render(screen)
 
-    
-    while running:
+
+pygame.set.caption("Beaver's War")
+
+ 
+while running:
         # Что отрисовываем
         if window_show == 0:
             if flag == 1:
