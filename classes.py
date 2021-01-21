@@ -528,12 +528,13 @@ while running:
         while not edit_mode:
             for i in range(height):
                 for j in range(width):
-                    if life_board.get_tile([j, i]) is Unit():
-                        life_board.get_tile([j, i]).pattern()
-                    elif life_board.get_tile([j, i]) is Building():
-                        life_board.get_tile([j, i]).pattern
-                    elif life_board.get_tile([j, i]) is Projectile():
+                    if life_board.tiles[j][i].drawn() is Unit():
+                        life_board.tiles[j][i].pattern()
+                    if life_board.tiles[j][i].drawn() is Building():
+                        life_board.tiles[j][i].pattern()
+                    if life_board.tiles[j][i].drawn() is Projectile():
                         pass
+
 
     screen.fill((0, 0, 0))
     life_board.render(screen)
