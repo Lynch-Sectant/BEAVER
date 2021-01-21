@@ -74,7 +74,7 @@ class Board:
 
 
 class Entity(pygame.sprite.Sprite):
-    def __init__(self, sheet, x, y, board, team, rows=0, columns=0):
+    def __init__(self, sheet, x, y, board, team, rows=1, columns=1):
         super().__init__(all_sprites)
         self.frames = []
         self.cut_sheet(sheet, columns, rows)
