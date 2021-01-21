@@ -246,6 +246,8 @@ class Trooper(Unit):
             return None
         else:
             enemy.hp -= 1
+            if enemy.hp == 0:
+                self.target == None
 
 
 class Sniper(Unit):
@@ -343,6 +345,10 @@ class Defense_Tower(Building):
                 self.target = k
                 self.attack()
                 return None
+    def attack(self):
+        bullet = Bullet("bullet.png", 0, 0, self.board, self.team, (self.coords[0]-self.target.coords[0])*self.board.tile_size, (self.coords[1]-self.target.coords[1])*self.board.tile_size, (self.rect.x, self.rect.y))
+        bullet.move()
+        bullet.kill()
 
 
 # all code from here
@@ -381,8 +387,10 @@ class Projectile(Entity):
         PROJECTILES.add(self)
 
     def move(self):
-        self.coords = self.coords[0] + self.vx, self.coords[1] + self.vy
-        self.set_pos(self.coords[1], self.coords[0])
+        for i in range(4):
+            self.coords = self.coords[0] + self.vx // 4, self.coords[1] + self.vy // 4
+            self.set_pos(self.coords[1], self.coords[0])
+            pygame.display.flip()
 
     def pattern(self):
         pass
