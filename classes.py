@@ -296,7 +296,9 @@ class Sniper(Unit):
     def attack(self, target):
         bullet = Bullet("bullet.png", 0, 0, self.board, self.team,
                         (self.coords[0] - target.coords[0]) * self.board.tile_size,
-                        (self.coords[1] - target.coords[1]) * self.board.tile_size, (self.rect.x, self.rect.y))
+                        (self.coords[1] - target.coords[1]) * self.board.tile_size,
+                        (self.rect.x * self.board.tile_size + self.board.left,
+                         self.rect.y * self.board.tile_size + self.board.top))
         bullet.move()
         bullet.kill()
 
