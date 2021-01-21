@@ -480,8 +480,10 @@ def record(win):
     con = sqlite3.connect('Records.db')
     cur = con.cursor()
     if win:
+        SCORE += 50
         cur.execute(f'''INSERT INTO Records (Status, Score) VALUES ('VICTORY',{SCORE})''')
     else:
+        SCORE -= 100
         cur.execute(f'''INSERT INTO Records VALUES ('DEFEAT',{SCORE})''')
     con.commit()
 
@@ -495,6 +497,7 @@ NEXT_MOVE = pygame.USEREVENT + 1
 pygame.time.set_timer(NEXT_MOVE, 100)
 
 while running:
+    x, y = event.pos()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -503,38 +506,41 @@ while running:
         while edit_mode:
             if event.type == pygame.KEYDOWN:
                 if event.type == pygame.K_e:
-                    CHOSEN_ENTITY = Trooper()
+                    CHOSEN_ENTITY = Trooper(life_board, x, y, 3, 5, 5, 1, 8, 'player')
                 elif event.type == pygame.K_r:
-                    CHOSEN_ENTITY = Sniper()
+                    CHOSEN_ENTITY = Sniper(life_board, x, y, 3, 5, 3, 2, 12, 'player')
                 elif event.type == pygame.K_w:
-                    CHOSEN_ENTITY = Gasfighter()
+                    CHOSEN_ENTITY = GasFighter(life_board, x, y, 7, 3, 7, 3, 12, 'player')
                 elif event.type == pygame.K_a:
-                    CHOSEN_ENTITY = Farm()
+                    CHOSEN_ENTITY = Farm(life_board, x, y, 10, 'player')
                 elif event.type == pygame.K_s:
-                    CHOSEN_ENTITY = Attack_Tower()
+                    CHOSEN_ENTITY = Attack_Tower(life_board, x, y, 10, 'player')
                 elif event.type == pygame.K_i:
-                    CHOSEN_ENTITY = Wall()
+                    CHOSEN_ENTITY = Wall(life_board, x, y, 5, 'player')
                 elif event.type == pygame.K_KP_ENTER:
                     edit_mode = False
                 if event.type == pygame.MOUSEBUTTONUP:
-                    CHOSEN_ENTITY.spawn(event.pos, PLAYER_COLOR)
+                    x, y = event.pos()
+                    life_board.get_tile([x, y]) = CHOSEN_ENTITY
             for i in range(height):
                 for j in range(width):
                     if life_board.get_tile([j, i]) is None and METHACASH >= 5 and random.randint(0, 100) >= 75:
-                        random.choise(Warrior(), Archer()).spawn(i, j, ENEMY_COLOR)
+                        light = random.choise(Trooper(life_board, x, y, 3, 5, 5, 1, 8, 'enemy'), Sniper(life_board, x, y, 3, 5, 3, 2, 12, 'enemy'))
+                        life_board.get_tile([x, y]) = light
                     if life_board.get_tile([j, i]) is None and METHACASH >= 20 and random.randint(0, 100) >= 75:
-                        Gasfighter().spawn([i, j], ENEMY_COLOR)
+                        heavy = GasFighter(life_board, x, y, 7, 3, 7, 3, 12, 'enemy')
+                        life_board.get_tile([x, y]) = heavy
 
         while not edit_mode:
             methacash(49, 49)
             for i in range(height):
                 for j in range(width):
-                    if life_board.tiles[j][i].drawn() is Unit():
+                    if life_board.tiles[j][i].drawn() is Unit:
                         life_board.move(ENEMY_COORDS)
                         life_board.tiles[j][i].pattern()
-                    if life_board.tiles[j][i].drawn() is Building():
+                    if life_board.tiles[j][i].drawn() is Building:
                         life_board.tiles[j][i].pattern()
-                    if life_board.tiles[j][i].drawn() is Projectile():
+                    if life_board.tiles[j][i].drawn() is Projectile:
                         life_board.tiles[j][i].pattern()
 
 
