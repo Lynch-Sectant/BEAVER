@@ -291,6 +291,10 @@ class Sniper(Unit):
                 self.move_on_vector(tuple(near))
             else:
                 self.pattern(near)
+    def attack(self, target):
+        bullet = Bullet("bullet.png", 0, 0, self.board, self.team, (self.coords[0]-target.coords[0])*self.board.tile_size, (self.coords[1]-target.coords[1])*self.board.tile_size, (self.rect.x, self.rect.y))
+        bullet.move()
+        bullet.kill()
 
 
 class GasFighter(Unit):
@@ -310,6 +314,9 @@ class GasFighter(Unit):
                             minim = (((i + j) / 2 + 0.5) // 1 == 1, self.board.tiles[i][j].drawn)
         self.target = minim[1]
         self.move(minim[1].coords)
+    def attack(self, target):
+        bullet = Cloud("gas.jpeg", 0, 0, self.board, self.team, (self.coords[0]-self.target.coords[0])*self.board.tile_size, (self.coords[1]-self.target.coords[1])*self.board.tile_size, (self.rect.x, self.rect.y))
+        bullet.move()
 
 
 class Main_Tower(Building):
