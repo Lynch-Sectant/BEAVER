@@ -818,7 +818,7 @@ while running:
                     edit_mode = False
                 if event.type == pygame.MOUSEBUTTONUP:
                     x, y = event.pos()
-                    life_board.get_tile([x, y]) = CHOSEN_ENTITY
+                    life_board.tiles[life_board.get_tile((x, y))[0]][life_board.get_tile((x, y))[1]].drawn  = CHOSEN_ENTITY
             for i in range(height):
                 for j in range(width):
                     if life_board.get_tile([j, i]) is None and METHACASH >= 5 and random.randint(0, 100) >= 75:
