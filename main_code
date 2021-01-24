@@ -1037,12 +1037,15 @@ while playing:
             for i in range(height):
                 for j in range(width):
                     if life_board.get_tile([j, i]) is None and METHACASH >= 5 and random.randint(0, 100) >= 75:
-                        light = random.choise(Trooper(life_board, x, y, 3, 5, 5, 1, 8, 'enemy'),
-                                              Sniper(life_board, x, y, 3, 5, 3, 2, 12, 'enemy'))
-                        life_board.get_tile([x, y]) = light
+                        light = random.choise(Trooper('trooper_2', x, y, life_board, 3, 5, 5, 1, 8, 'enemy'),
+                                              Sniper('sniper', x, y, life_board, 3, 5, 3, 2, 12, 'enemy'))
+                        
+                    life_board.tiles[life_board.get_tile((x, y))[0]][
+                        life_board.get_tile((x, y))[1]].drawn = light
                     if life_board.get_tile([j, i]) is None and METHACASH >= 20 and random.randint(0, 100) >= 75:
-                        heavy = GasFighter(life_board, x, y, 7, 3, 7, 3, 12, 'enemy')
-                        life_board.get_tile([x, y]) = heavy
+                        heavy = GasFighter('gas_fighter_2', x, y, life_board, 7, 3, 7, 3, 12, 'enemy')
+                        life_board.tiles[life_board.get_tile((x, y))[0]][
+                          life_board.get_tile((x, y))[1]].drawn = heavy
 
         while not edit_mode:
             methacash(49, 49)
