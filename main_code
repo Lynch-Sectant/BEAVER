@@ -327,6 +327,8 @@ class Tile:
     def __init__(self):
         self.color = pygame.Color('black')
         self.drawn = None
+    def pattern(self):
+        self.drawn.pattern()
 
 
 class Board:
@@ -443,7 +445,7 @@ class Unit(Entity):
         move_vector = move_vector[0] + self.coords[0], move_vector[1] + self.coords[1]
         self.set_pos(self.board, *move_vector)
 
-    def pattern(self, near):
+    def pattern(self, near=(0, 0)):
         if near[1] < 0:
             for h in range(near[1], 0, -1):
                 if near[0] < 0:
@@ -1048,12 +1050,12 @@ while playing:
             methacash(49, 49)
             for i in range(height):
                 for j in range(width):
-                    if life_board.tiles[j][i].drawn() is Unit:
+                    if life_board.tiles[j][i].drawn is Unit:
                         life_board.move(ENEMY_COORDS=0)
                         life_board.tiles[j][i].pattern()
-                    if life_board.tiles[j][i].drawn() is Building:
+                    if life_board.tiles[j][i].drawn is Building:
                         life_board.tiles[j][i].pattern()
-                    if life_board.tiles[j][i].drawn() is Projectile:
+                    if life_board.tiles[j][i].drawn is Projectile:
                         life_board.tiles[j][i].pattern()
 
     screen.fill((0, 0, 0))
