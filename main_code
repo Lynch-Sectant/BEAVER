@@ -381,14 +381,14 @@ class Entity(pygame.sprite.Sprite):
         self.cut_sheet(sheet, columns, rows)
         self.cur_frame = 0
         self.image = self.frames[self.cur_frame]
-        self.set_pos(board, x, y)
+        self.set_pos(x, y)
         self.board = board
         self.team = team
 
-    def set_pos(self, board, x, y):
+    def set_pos(self, x, y):
         self.coords = x, y
-        self.rect.x = board.left + (x - 1) * board.tile_size
-        self.rect.y = board.top + (y - 1) * board.tile_size
+        self.rect.x = self.board.left + (x - 1) * self.board.tile_size
+        self.rect.y = self.board.top + (y - 1) * self.board.tile_size
 
     def cut_sheet(self, sheet, columns, rows):
         self.rect = pygame.Rect(0, 0, sheet.get_width() // columns,
