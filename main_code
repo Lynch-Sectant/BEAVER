@@ -3,6 +3,66 @@ import pygame
 import sqlite3
 import sys
 
+con = sqlite3.connect('settings.db')
+cur = con.cursor()
+result = cur.execute("""SELECT view FROM sett
+                WHERE id = (SELECT MAX(id) 
+                FROM sett)""").fetchall()
+result = str(result).split(', ')
+w = int(result[0].replace("[('", ''))
+h = int(result[1].replace("',)]", ''))
+
+result = cur.execute("""SELECT FPS FROM sett
+                    WHERE id = (SELECT MAX(id) 
+                    FROM sett)""").fetchall()
+result = str(result)
+fps = result.replace("[(", '')
+fps = int(str(fps).replace(',)]', ''))
+
+result = cur.execute("""SELECT view FROM sett
+                           WHERE id = (SELECT MAX(id) 
+                           FROM sett)""").fetchall()
+result = str(result)
+vieww = result.replace("[('", '')
+vieww = str(vieww).replace("',)]", '')
+
+if w == 800 and h == 600:
+    flag = 1
+else:
+    flag = 2
+
+pygame.init()
+size = width, height = w, h
+screen = pygame.display.set_mode(size)
+screen.fill((0, 0, 0))
+result = cur.execute("""SELECT musicc FROM sett
+                               WHERE id = (SELECT MAX(id) 
+                               FROM sett)""").fetchall()
+music = str(result[0]).replace('(', '')
+music = music.replace(',)', '')
+music = music.strip("'")
+a = pygame.mixer.Sound(music)
+a.play(-1)
+con = sqlite3.connect('Records.db')
+cur = con.cursor()
+result = cur.execute("""SELECT Status, Score FROM Records
+                        WHERE Run = (SELECT MIN(Run) 
+                        FROM Records)""").fetchall()
+status1 = result[0][0]
+score1 = result[0][1]
+
+result = cur.execute("""SELECT Status, Score FROM Records
+                            WHERE Run = (SELECT MAX(Run) 
+                            FROM Records)""").fetchall()
+status2 = result[0][0]
+score2 = result[0][1]
+
+result = cur.execute("""SELECT Status, Score FROM Records
+                            WHERE Score = (SELECT MAX(Score) 
+                            FROM Records )AND Status = 'win' """).fetchall()
+status3 = result[0][0]
+score3 = result[0][1]
+
 
 def check(x, y, w, h, posx, posy):
     if x <= posx <= w + x and y <= posy <= h + y:
@@ -161,79 +221,81 @@ def welcome(screen, pp, bb, a):
     screen.blit(text, (text_x00, text_y00))
     pygame.draw.rect(screen, (255, 255, 100), (text_x00 - 10, text_y00 - 10, text_w00 + 20, text_h00 + 20), bb)
 
+
 def show_records(screen, a):
-        global status1, status2, status3
-        global score1, score2, score3
+    global status1, status2, status3
+    global score1, score2, score3
 
-        screen.fill((0, 0, 0))
-        font = pygame.font.Font(None, 55 * a)
+    screen.fill((0, 0, 0))
+    font = pygame.font.Font(None, 55 * a)
 
-        text = font.render("First attemp", True, (255, 255, 100))
-        text_x = width - text.get_width() * 3.5
-        text_y = height - text.get_height() * 13
-        screen.blit(text, (text_x, text_y))
+    text = font.render("First attemp", True, (255, 255, 100))
+    text_x = width - text.get_width() * 3.5
+    text_y = height - text.get_height() * 13
+    screen.blit(text, (text_x, text_y))
 
-        text = font.render("Last attemp", True, (255, 255, 100))
-        text_x = width - text.get_width() * 3.55
-        text_y = height - text.get_height() * 9
-        screen.blit(text, (text_x, text_y))
+    text = font.render("Last attemp", True, (255, 255, 100))
+    text_x = width - text.get_width() * 3.55
+    text_y = height - text.get_height() * 9
+    screen.blit(text, (text_x, text_y))
 
-        text = font.render("Best attemp", True, (255, 255, 100))
-        text_x = width - text.get_width() * 3.5
-        text_y = height - text.get_height() * 5
-        screen.blit(text, (text_x, text_y))
+    text = font.render("Best attemp", True, (255, 255, 100))
+    text_x = width - text.get_width() * 3.5
+    text_y = height - text.get_height() * 5
+    screen.blit(text, (text_x, text_y))
 
-        text = font.render("Status", True, (255, 255, 100))
-        text_x = width - text.get_width() * 3.5
-        text_y = height - text.get_height() * 16
-        screen.blit(text, (text_x, text_y))
+    text = font.render("Status", True, (255, 255, 100))
+    text_x = width - text.get_width() * 3.5
+    text_y = height - text.get_height() * 16
+    screen.blit(text, (text_x, text_y))
 
-        text = font.render("Score", True, (255, 255, 100))
-        text_x = width - text.get_width() * 1.5
-        text_y = height - text.get_height() * 16
-        screen.blit(text, (text_x, text_y))
+    text = font.render("Score", True, (255, 255, 100))
+    text_x = width - text.get_width() * 1.5
+    text_y = height - text.get_height() * 16
+    screen.blit(text, (text_x, text_y))
 
-        text = font.render(("{}").format(status1), True, (255, 255, 100))
-        text_x = width - text.get_width() * 6
-        text_y = height - text.get_height() * 13.3
-        screen.blit(text, (text_x, text_y))
+    text = font.render(("{}").format(status1), True, (255, 255, 100))
+    text_x = width - text.get_width() * 6
+    text_y = height - text.get_height() * 13.3
+    screen.blit(text, (text_x, text_y))
 
-        text = font.render(("{}").format(status2), True, (255, 255, 100))
-        text_x = width - text.get_width() * 6
-        text_y = height - text.get_height() * 9.3
-        screen.blit(text, (text_x, text_y))
+    text = font.render(("{}").format(status2), True, (255, 255, 100))
+    text_x = width - text.get_width() * 6
+    text_y = height - text.get_height() * 9.3
+    screen.blit(text, (text_x, text_y))
 
-        text = font.render(("{}").format(status3), True, (255, 255, 100))
-        text_x = width - text.get_width() * 6
-        text_y = height - text.get_height() * 5.3
-        screen.blit(text, (text_x, text_y))
+    text = font.render(("{}").format(status3), True, (255, 255, 100))
+    text_x = width - text.get_width() * 6
+    text_y = height - text.get_height() * 5.3
+    screen.blit(text, (text_x, text_y))
 
-        text = font.render(("{}").format(score1), True, (255, 255, 100))
-        text_x = width - text.get_width() * 1.5
-        text_y = height - text.get_height() * 13.3
-        screen.blit(text, (text_x, text_y))
+    text = font.render(("{}").format(score1), True, (255, 255, 100))
+    text_x = width - text.get_width() * 1.5
+    text_y = height - text.get_height() * 13.3
+    screen.blit(text, (text_x, text_y))
 
-        text = font.render(("{}").format(score2), True, (255, 255, 100))
-        text_x = width - text.get_width() * 1.5
-        text_y = height - text.get_height() * 9.3
-        screen.blit(text, (text_x, text_y))
+    text = font.render(("{}").format(score2), True, (255, 255, 100))
+    text_x = width - text.get_width() * 1.5
+    text_y = height - text.get_height() * 9.3
+    screen.blit(text, (text_x, text_y))
 
-        text = font.render(("{}").format(score3), True, (255, 255, 100))
-        text_x = width - text.get_width() * 1.5
-        text_y = height - text.get_height() * 5.3
-        screen.blit(text, (text_x, text_y))
+    text = font.render(("{}").format(score3), True, (255, 255, 100))
+    text_x = width - text.get_width() * 1.5
+    text_y = height - text.get_height() * 5.3
+    screen.blit(text, (text_x, text_y))
 
-        color = pygame.Color(255, 255, 255)
-        pygame.draw.line(screen, color, (320 * a, 0), (320 * a, 600 * a), width=5 * a)
+    color = pygame.Color(255, 255, 255)
+    pygame.draw.line(screen, color, (320 * a, 0), (320 * a, 600 * a), width=5 * a)
 
-        color = pygame.Color(255, 255, 255)
-        pygame.draw.line(screen, color, (580 * a, 0), (580 * a, 600 * a), width=5 * a)
+    color = pygame.Color(255, 255, 255)
+    pygame.draw.line(screen, color, (580 * a, 0), (580 * a, 600 * a), width=5 * a)
 
-        color = pygame.Color(255, 255, 255)
-        pygame.draw.line(screen, color, (0, 200 * a), (800 * a, 200 * a), width=5 * a)
+    color = pygame.Color(255, 255, 255)
+    pygame.draw.line(screen, color, (0, 200 * a), (800 * a, 200 * a), width=5 * a)
 
-        color = pygame.Color(255, 255, 255)
-        pygame.draw.line(screen, color, (0, 350 * a), (800 * a, 350 * a), width=5 * a)
+    color = pygame.Color(255, 255, 255)
+    pygame.draw.line(screen, color, (0, 350 * a), (800 * a, 350 * a), width=5 * a)
+
 
 PAUSE = True
 CHOSEN_ENTITY = None
@@ -260,6 +322,7 @@ class Tile:
     def __init__(self):
         self.color = pygame.Color('black')
         self.drawn = None
+
     def pattern(self):
         self.drawn.pattern()
 
@@ -722,7 +785,11 @@ def record(win):
     con.commit()
 
 
+size = width, height = 800, 600
+
+
 def play():
+    global size
     size = width, height = w, h
 
 
@@ -731,69 +798,7 @@ screen = pygame.display.set_mode(size)
 NEXT_MOVE = pygame.USEREVENT + 1
 pygame.time.set_timer(NEXT_MOVE, 100)
 
-
 if __name__ == '__main__':
-    con = sqlite3.connect('settings.db')
-    cur = con.cursor()
-    result = cur.execute("""SELECT view FROM sett
-                WHERE id = (SELECT MAX(id) 
-                FROM sett)""").fetchall()
-    result = str(result).split(', ')
-    w = int(result[0].replace("[('", ''))
-    h = int(result[1].replace("',)]", ''))
-
-    result = cur.execute("""SELECT FPS FROM sett
-                    WHERE id = (SELECT MAX(id) 
-                    FROM sett)""").fetchall()
-    result = str(result)
-    fps = result.replace("[(", '')
-    fps = int(str(fps).replace(',)]', ''))
-
-    result = cur.execute("""SELECT view FROM sett
-                           WHERE id = (SELECT MAX(id) 
-                           FROM sett)""").fetchall()
-    result = str(result)
-    vieww = result.replace("[('", '')
-    vieww = str(vieww).replace("',)]", '')
-
-    if w == 800 and h == 600:
-        flag = 1
-    else:
-        flag = 2
-
-    pygame.init()
-    size = width, height = w, h
-    screen = pygame.display.set_mode(size)
-    screen.fill((0, 0, 0))
-    result = cur.execute("""SELECT musicc FROM sett
-                               WHERE id = (SELECT MAX(id) 
-                               FROM sett)""").fetchall()
-    music = str(result[0]).replace('(', '')
-    music = music.replace(',)', '')
-    music = music.strip("'")
-    a = pygame.mixer.Sound(music)
-    a.play(-1)
-    con = sqlite3.connect('Records.db')
-    cur = con.cursor()
-    result = cur.execute("""SELECT Status, Score FROM Records
-                        WHERE Run = (SELECT MIN(Run) 
-                        FROM Records)""").fetchall()
-    status1 = result[0][0]
-    score1 = result[0][1]
-
-    result = cur.execute("""SELECT Status, Score FROM Records
-                            WHERE Run = (SELECT MAX(Run) 
-                            FROM Records)""").fetchall()
-    status2 = result[0][0]
-    score2 = result[0][1]
-
-    result = cur.execute("""SELECT Status, Score FROM Records
-                            WHERE Score = (SELECT MAX(Score) 
-                            FROM Records )AND Status = 'win' """).fetchall()
-    status3 = result[0][0]
-    score3 = result[0][1]
-    
-    
     window_show = 0
     pygame.display.flip()
     running = True
@@ -1051,7 +1056,7 @@ while playing:
             for i in range(height):
                 for j in range(width):
                     if life_board.tiles[j][i].drawn is Unit:
-                        life_board.move(ENEMY_COORDS=0)
+                        life_board.move(ENEMY_COORDS)
                         life_board.tiles[j][i].pattern()
                     if life_board.tiles[j][i].drawn is Building:
                         life_board.tiles[j][i].pattern()
@@ -1061,7 +1066,5 @@ while playing:
     screen.fill((0, 0, 0))
     life_board.render(screen)
 pygame.quit()
-print('В 1052 СТРОКЕ ЗАГЛУШКА')
-pygame.set.caption("Beaver's War")
-
+print('В 1059 проблема')
 
