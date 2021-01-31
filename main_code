@@ -316,6 +316,7 @@ SCORE = 0
 running = True
 edit_mode = True
 CHOSEN_ENTITY = None
+ENEMY_COORDS = (2, 12)
 
 
 class Tile:
