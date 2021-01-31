@@ -221,82 +221,6 @@ def welcome(screen, pp, bb, a):
     screen.blit(text, (text_x00, text_y00))
     pygame.draw.rect(screen, (255, 255, 100), (text_x00 - 10, text_y00 - 10, text_w00 + 20, text_h00 + 20), bb)
 
-
-def show_records(screen, a):
-    global status1, status2, status3
-    global score1, score2, score3
-
-    screen.fill((0, 0, 0))
-    font = pygame.font.Font(None, 55 * a)
-
-    text = font.render("First attemp", True, (255, 255, 100))
-    text_x = width - text.get_width() * 3.5
-    text_y = height - text.get_height() * 13
-    screen.blit(text, (text_x, text_y))
-
-    text = font.render("Last attemp", True, (255, 255, 100))
-    text_x = width - text.get_width() * 3.55
-    text_y = height - text.get_height() * 9
-    screen.blit(text, (text_x, text_y))
-
-    text = font.render("Best attemp", True, (255, 255, 100))
-    text_x = width - text.get_width() * 3.5
-    text_y = height - text.get_height() * 5
-    screen.blit(text, (text_x, text_y))
-
-    text = font.render("Status", True, (255, 255, 100))
-    text_x = width - text.get_width() * 3.5
-    text_y = height - text.get_height() * 16
-    screen.blit(text, (text_x, text_y))
-
-    text = font.render("Score", True, (255, 255, 100))
-    text_x = width - text.get_width() * 1.5
-    text_y = height - text.get_height() * 16
-    screen.blit(text, (text_x, text_y))
-
-    text = font.render(("{}").format(status1), True, (255, 255, 100))
-    text_x = width - text.get_width() * 6
-    text_y = height - text.get_height() * 13.3
-    screen.blit(text, (text_x, text_y))
-
-    text = font.render(("{}").format(status2), True, (255, 255, 100))
-    text_x = width - text.get_width() * 6
-    text_y = height - text.get_height() * 9.3
-    screen.blit(text, (text_x, text_y))
-
-    text = font.render(("{}").format(status3), True, (255, 255, 100))
-    text_x = width - text.get_width() * 6
-    text_y = height - text.get_height() * 5.3
-    screen.blit(text, (text_x, text_y))
-
-    text = font.render(("{}").format(score1), True, (255, 255, 100))
-    text_x = width - text.get_width() * 1.5
-    text_y = height - text.get_height() * 13.3
-    screen.blit(text, (text_x, text_y))
-
-    text = font.render(("{}").format(score2), True, (255, 255, 100))
-    text_x = width - text.get_width() * 1.5
-    text_y = height - text.get_height() * 9.3
-    screen.blit(text, (text_x, text_y))
-
-    text = font.render(("{}").format(score3), True, (255, 255, 100))
-    text_x = width - text.get_width() * 1.5
-    text_y = height - text.get_height() * 5.3
-    screen.blit(text, (text_x, text_y))
-
-    color = pygame.Color(255, 255, 255)
-    pygame.draw.line(screen, color, (320 * a, 0), (320 * a, 600 * a), width=5 * a)
-
-    color = pygame.Color(255, 255, 255)
-    pygame.draw.line(screen, color, (580 * a, 0), (580 * a, 600 * a), width=5 * a)
-
-    color = pygame.Color(255, 255, 255)
-    pygame.draw.line(screen, color, (0, 200 * a), (800 * a, 200 * a), width=5 * a)
-
-    color = pygame.Color(255, 255, 255)
-    pygame.draw.line(screen, color, (0, 350 * a), (800 * a, 350 * a), width=5 * a)
-
-
 PAUSE = True
 CHOSEN_ENTITY = None
 all_sprites = pygame.sprite.Group()
@@ -803,7 +727,79 @@ if __name__ == '__main__':
     window_show = 0
     pygame.display.flip()
     running = True
+def show_records(screen, a):
+    global status1, status2, status3
+    global score1, score2, score3
 
+    screen.fill((0, 0, 0))
+    font = pygame.font.Font(None, 55 * a)
+
+    text = font.render("First attemp", True, (255, 255, 100))
+    text_x = width - text.get_width() * 3.5
+    text_y = height - text.get_height() * 13
+    screen.blit(text, (text_x, text_y))
+
+    text = font.render("Last attemp", True, (255, 255, 100))
+    text_x = width - text.get_width() * 3.55
+    text_y = height - text.get_height() * 9
+    screen.blit(text, (text_x, text_y))
+
+    text = font.render("Best attemp", True, (255, 255, 100))
+    text_x = width - text.get_width() * 3.5
+    text_y = height - text.get_height() * 5
+    screen.blit(text, (text_x, text_y))
+
+    text = font.render("Status", True, (255, 255, 100))
+    text_x = width - text.get_width() * 3.5
+    text_y = height - text.get_height() * 16
+    screen.blit(text, (text_x, text_y))
+
+    text = font.render("Score", True, (255, 255, 100))
+    text_x = width - text.get_width() * 1.5
+    text_y = height - text.get_height() * 16
+    screen.blit(text, (text_x, text_y))
+
+    text = font.render(("{}").format(status1), True, (255, 255, 100))
+    text_x = width - text.get_width() * 6
+    text_y = height - text.get_height() * 13.3
+    screen.blit(text, (text_x, text_y))
+
+    text = font.render(("{}").format(status2), True, (255, 255, 100))
+    text_x = width - text.get_width() * 6
+    text_y = height - text.get_height() * 9.3
+    screen.blit(text, (text_x, text_y))
+
+    text = font.render(("{}").format(status3), True, (255, 255, 100))
+    text_x = width - text.get_width() * 6
+    text_y = height - text.get_height() * 5.3
+    screen.blit(text, (text_x, text_y))
+
+    text = font.render(("{}").format(score1), True, (255, 255, 100))
+    text_x = width - text.get_width() * 1.5
+    text_y = height - text.get_height() * 13.3
+    screen.blit(text, (text_x, text_y))
+
+    text = font.render(("{}").format(score2), True, (255, 255, 100))
+    text_x = width - text.get_width() * 1.5
+    text_y = height - text.get_height() * 9.3
+    screen.blit(text, (text_x, text_y))
+
+    text = font.render(("{}").format(score3), True, (255, 255, 100))
+    text_x = width - text.get_width() * 1.5
+    text_y = height - text.get_height() * 5.3
+    screen.blit(text, (text_x, text_y))
+
+    color = pygame.Color(255, 255, 255)
+    pygame.draw.line(screen, color, (320 * a, 0), (320 * a, 600 * a), width=5 * a)
+
+    color = pygame.Color(255, 255, 255)
+    pygame.draw.line(screen, color, (580 * a, 0), (580 * a, 600 * a), width=5 * a)
+
+    color = pygame.Color(255, 255, 255)
+    pygame.draw.line(screen, color, (0, 200 * a), (800 * a, 200 * a), width=5 * a)
+
+    color = pygame.Color(255, 255, 255)
+    pygame.draw.line(screen, color, (0, 350 * a), (800 * a, 350 * a), width=5 * a)
 while running:
     # Что отрисовываем
     if window_show == 0:
