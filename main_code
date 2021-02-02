@@ -3,7 +3,7 @@ import pygame
 import sqlite3
 import sys
 
-con = sqlite3.connect('settings1.db')
+con = sqlite3.connect('settings.db')
 cur = con.cursor()
 result = cur.execute("""SELECT view FROM sett
                 WHERE id = (SELECT MAX(id) 
@@ -41,6 +41,7 @@ result = cur.execute("""SELECT musicc FROM sett
 music = str(result[0]).replace('(', '')
 music = music.replace(',)', '')
 music = music.strip("'")
+pygame.mixer.music.set_volume(0.5)
 a = pygame.mixer.Sound(music)
 a.play(-1)
 con = sqlite3.connect('Records.db')
@@ -672,7 +673,7 @@ class Cloud(Projectile):
             PLAYER_UNITS.second_pattern()
 
 
-life_board = Board(49, 49)
+life_board = Board(25, 25)
 
 
 def methacash(width, height):
@@ -784,12 +785,8 @@ def show_records(screen, a):
     color = pygame.Color(255, 255, 255)
     pygame.draw.line(screen, color, (0, 350 * a), (800 * a, 350 * a), width=5 * a)
 
-
-size = width, height = 800, 600
-
-
 def play():
-    global size
+    global size, width, height
     size = width, height = w, h
 
 
@@ -991,9 +988,6 @@ while running:
                         if check(0, 0, 800 * 2, 600 * 2, event.pos[0], event.pos[1]):
                             window_show = 7
 
-                    elif check(600 * 2, 10 * 2, 150 * 2, 150 * 2, event.pos[0], event.pos[1]):
-                        print(0)
-
                     elif check(400 * 2, 400 * 2, 100 * 2, 100 * 2, event.pos[0], event.pos[1]):
                         window_show = 1
 
@@ -1009,7 +1003,6 @@ while running:
     pygame.display.flip()
 pygame.quit()
 pygame.init()
-size = width, height = 1000, 1000
 screen = pygame.display.set_mode(size)
 
 while playing:
@@ -1053,7 +1046,7 @@ while playing:
                             life_board.get_tile((x, y))[1]].drawn = heavy
 
         while not edit_mode:
-            methacash(49, 49)
+            methacash(25, 25)
             for i in range(height):
                 for j in range(width):
                     if life_board.tiles[j][i].drawn is Unit:
@@ -1064,9 +1057,8 @@ while playing:
                     if life_board.tiles[j][i].drawn is Projectile:
                         life_board.tiles[j][i].pattern()
 
-    screen.fill((0, 0, 0))
+
     life_board.render(screen)
     pygame.display.flip()
 pygame.quit()
-print('В 1059 проблема')
 
