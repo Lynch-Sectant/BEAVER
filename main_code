@@ -1042,6 +1042,17 @@ while playing:
                     if life_board.get_tile([j, i]) is None and METHACASH >= 20 and random.randint(0, 100) >= 75:
                         heavy = GasFighter('gas_fighter_2', x, y, life_board, 7, 3, 7, 3, 12, 'enemy')
                         life_board.tiles[life_board.get_tile((x, y))[0]][life_board.get_tile((x, y))[1]].drawn = heavy
+           if not edit_mode:
+            methacash(49, 49)
+            for i in range(height):
+                for j in range(width):
+                    if life_board.tiles[j][i].drawn is Unit:
+                        life_board.move(ENEMY_COORDS=0)
+                        life_board.tiles[j][i].pattern()
+                    if life_board.tiles[j][i].drawn is Building:
+                        life_board.tiles[j][i].pattern()
+                    if life_board.tiles[j][i].drawn is Projectile:
+                        life_board.tiles[j][i].pattern()
     pygame.display.flip()
 pygame.quit()
 
