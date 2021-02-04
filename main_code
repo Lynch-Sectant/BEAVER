@@ -47,8 +47,7 @@ a.play(-1)
 con = sqlite3.connect('Records.db')
 cur = con.cursor()
 result = cur.execute("""SELECT Status, Score FROM Records
-                        WHERE Run = (SELECT MIN(Run) 
-                        FROM Records)""").fetchall()
+                        WHERE Run = 1""").fetchall()
 status1 = result[0][0]
 score1 = result[0][1]
 
@@ -1006,59 +1005,12 @@ pygame.init()
 screen = pygame.display.set_mode(size)
 
 while playing:
-    x, y = event.pos
     for event in pygame.event.get():
+        life_board.render(screen)
         if event.type == pygame.QUIT:
-            running = False
-        if event.type == pygame.MOUSEBUTTONDOWN and edit_mode:
-            x, y = event.pos
-            life_board.get_click(event.pos)
-        while edit_mode:
-            for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_e:
-                        CHOSEN_ENTITY = Trooper('trooper_1', life_board, x, y, 3, 5, 5, 1, 8, 'player')
-                    elif event.key == pygame.K_r:
-                        CHOSEN_ENTITY = Sniper('sniper_1', life_board, x, y, 3, 5, 3, 2, 12, 'player')
-                    elif event.key == pygame.K_w:
-                        CHOSEN_ENTITY = GasFighter('gasfighter_1', life_board, x, y, 7, 3, 7, 3, 12, 'player')
-                    elif event.key == pygame.K_a:
-                        CHOSEN_ENTITY = Farm('farm_1', x, y, 'player', life_board, 10)
-                    elif event.key == pygame.K_s:
-                        CHOSEN_ENTITY = Defense_Tower('vyshka_1', x, y, 'player', 10)
-                    elif event.key == pygame.K_i:
-                        CHOSEN_ENTITY = Wall('wall_1', x, y, life_board, 'player', 5)
-                    elif event.key == pygame.K_KP_ENTER:
-                        edit_mode = False
-                    if event.key == pygame.MOUSEBUTTONUP:
-                        x, y = event.pos()
-                        life_board.tiles[life_board.get_tile((x, y))[0]][
-                            life_board.get_tile((x, y))[1]].drawn = CHOSEN_ENTITY
-                for i in range(height):
-                    for j in range(width):
-                        if life_board.get_tile([j, i]) is None and METHACASH >= 5 and random.randint(0, 100) >= 75:
-                            light = random.choise(Trooper('trooper_2', x, y, life_board, 3, 5, 5, 1, 8, 'enemy'),
-                                                  Sniper('sniper', x, y, life_board, 3, 5, 3, 2, 12, 'enemy'))
-                            light.set_pos(life_board.tiles[life_board.get_tile((x, y))[0]][life_board.get_tile((x, y))[1]].drawn)
-                        if life_board.get_tile([j, i]) is None and METHACASH >= 20 and random.randint(0, 100) >= 75:
-                            heavy = GasFighter('gas_fighter_2', x, y, life_board, 7, 3, 7, 3, 12, 'enemy')
-                            heavy.set_pos(life_board.tiles[life_board.get_tile((x, y))[0]][
-                             life_board.get_tile((x, y))[1]].drawn)
-
-        while not edit_mode:
-            methacash(25, 25)
-            for i in range(height):
-                for j in range(width):
-                    if life_board.tiles[j][i].drawn is Unit:
-                        life_board.move(ENEMY_COORDS)
-                        life_board.tiles[j][i].pattern()
-                    if life_board.tiles[j][i].drawn is Building:
-                        life_board.tiles[j][i].pattern()
-                    if life_board.tiles[j][i].drawn is Projectile:
-                        life_board.tiles[j][i].pattern()
-
-
-    life_board.render(screen)
+            playing = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            life_board.render(screen)
     pygame.display.flip()
 pygame.quit()
 
