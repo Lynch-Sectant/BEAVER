@@ -1044,15 +1044,15 @@ while playing:
            if not edit_mode:
                if event.type == MONEY:
                     methacash(25, 25)
-                for i in range(height):
-                    for j in range(width):
-                        if life_board.tiles[j][i].drawn is Unit:
+                for i in range(len(life_board.tiles)):
+                    for j in range(len(life_board.tiles[0])):
+                        if life_board.tiles[i][j].drawn is Unit:
                             life_board.move(ENEMY_COORDS=0)
-                            life_board.tiles[j][i].pattern()
-                        if life_board.tiles[j][i].drawn is Building:
-                            life_board.tiles[j][i].pattern()
-                        if life_board.tiles[j][i].drawn is Projectile:
-                            life_board.tiles[j][i].pattern()
+                            life_board.tiles[i][j].pattern()
+                        if life_board.tiles[i][j].drawn is Building:
+                            life_board.tiles[i][j].pattern()
+                        if life_board.tiles[i][j].drawn is Projectile:
+                            life_board.tiles[i][j].pattern()
     pygame.display.flip()
 pygame.quit()
 
