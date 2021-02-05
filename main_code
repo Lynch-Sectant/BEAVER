@@ -678,7 +678,7 @@ life_board = Board(25, 25)
 def methacash(width, height):
     global life_board, METHACASH_ADDED, METHACASH, ENEMY_METHACASH, ENEMY_METHACASH_ADDED, edit_mode, SCORE
     added = 0
-    pygame.time.wait(20000)
+    pygame.time.set_timer(20000)
     for i in range(height):
         for j in (width):
             if life_board.get_tile(j, i) is Building():
@@ -791,8 +791,7 @@ def play():
 
 screen = pygame.display.set_mode(size)
 
-NEXT_MOVE = pygame.USEREVENT + 1
-pygame.time.set_timer(NEXT_MOVE, 100)
+MONEY = pygame.USEREVENT + 1
 
 if __name__ == '__main__':
     window_show = 0
@@ -1043,16 +1042,17 @@ while playing:
                         heavy = GasFighter('gas_fighter_2', x, y, life_board, 7, 3, 7, 3, 12, 'enemy')
                         life_board.tiles[life_board.get_tile((x, y))[0]][life_board.get_tile((x, y))[1]].drawn = heavy
            if not edit_mode:
-            methacash(49, 49)
-            for i in range(height):
-                for j in range(width):
-                    if life_board.tiles[j][i].drawn is Unit:
-                        life_board.move(ENEMY_COORDS=0)
-                        life_board.tiles[j][i].pattern()
-                    if life_board.tiles[j][i].drawn is Building:
-                        life_board.tiles[j][i].pattern()
-                    if life_board.tiles[j][i].drawn is Projectile:
-                        life_board.tiles[j][i].pattern()
+               if event.type == MONEY:
+                    methacash(25, 25)
+                for i in range(height):
+                    for j in range(width):
+                        if life_board.tiles[j][i].drawn is Unit:
+                            life_board.move(ENEMY_COORDS=0)
+                            life_board.tiles[j][i].pattern()
+                        if life_board.tiles[j][i].drawn is Building:
+                            life_board.tiles[j][i].pattern()
+                        if life_board.tiles[j][i].drawn is Projectile:
+                            life_board.tiles[j][i].pattern()
     pygame.display.flip()
 pygame.quit()
 
