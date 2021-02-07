@@ -1028,12 +1028,9 @@ while playing:
                 elif event.type == pygame.K_KP_ENTER:
                     edit_mode = False
                 if event.type == pygame.MOUSEBUTTONUP:
-                    if METHACASH >= CHOSEN_ENTITY.get_price():
-                        x, y = event.pos()
-                        life_board.tiles[life_board.get_tile((x, y))[0]][
-                            life_board.get_tile((x, y))[1]].drawn = CHOSEN_ENTITY
-                    else:
-                        print('Недостаточно денег!')
+                    x, y = event.pos()
+                    life_board.tiles[life_board.get_tile((x, y))[0]][
+                        life_board.get_tile((x, y))[1]].drawn = CHOSEN_ENTITY
             for i in range(height):
                 for j in range(width):
                     if life_board.get_tile([j, i]) is None and METHACASH >= 5 and random.randint(0, 100) >= 75:
@@ -1044,13 +1041,13 @@ while playing:
                     if life_board.get_tile([j, i]) is None and METHACASH >= 20 and random.randint(0, 100) >= 75:
                         heavy = GasFighter('gas_fighter_2', x, y, life_board, 7, 3, 7, 3, 12, 'enemy')
                         life_board.tiles[life_board.get_tile((x, y))[0]][life_board.get_tile((x, y))[1]].drawn = heavy
-           if not edit_mode:
-               if event.type == MONEY:
+            if not edit_mode:
+                if event.type == MONEY:
                     methacash(25, 25)
                 for i in range(len(life_board.tiles)):
                     for j in range(len(life_board.tiles[0])):
                         if life_board.tiles[i][j].drawn is Unit:
-                            life_board.move(ENEMY_COORDS=0)
+                            life_board.move(ENEMY_COORDS)
                             life_board.tiles[i][j].pattern()
                         if life_board.tiles[i][j].drawn is Building:
                             life_board.tiles[i][j].pattern()
