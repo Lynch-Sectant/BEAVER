@@ -1028,9 +1028,12 @@ while playing:
                 elif event.type == pygame.K_KP_ENTER:
                     edit_mode = False
                 if event.type == pygame.MOUSEBUTTONUP:
-                    x, y = event.pos()
-                    life_board.tiles[life_board.get_tile((x, y))[0]][
-                        life_board.get_tile((x, y))[1]].drawn = CHOSEN_ENTITY
+                    if METHACASH >= CHOSEN_ENTITY.get_price():
+                        x, y = event.pos()
+                        life_board.tiles[life_board.get_tile((x, y))[0]][
+                            life_board.get_tile((x, y))[1]].drawn = CHOSEN_ENTITY
+                    else:
+                        print('Недостаточно денег!')
             for i in range(height):
                 for j in range(width):
                     if life_board.get_tile([j, i]) is None and METHACASH >= 5 and random.randint(0, 100) >= 75:
