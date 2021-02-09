@@ -366,6 +366,10 @@ class Unit(Entity):
         self.board.tiles[self.coords[1]][self.coords[1]].drawn = None
         move_vector = move_vector[0] + self.coords[0], move_vector[1] + self.coords[1]
         self.set_pos(self.board, *move_vector)
+    
+        
+    def get_price(self):
+        return self.price
 
     def pattern(self, near=(0, 0)):
         if near[1] < 0:
