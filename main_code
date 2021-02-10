@@ -244,6 +244,72 @@ CHOSEN_ENTITY = None
 ENEMY_COORDS = (2, 12)
 
 
+def Losing_anim_func():
+    v = 200
+    x = -640
+    size = width, height = 600, 600
+    screen = pygame.display.set_mode(size)
+    screen.fill((0, 0, 255))
+    clock = pygame.time.Clock()
+    running = True
+    all_sprites = pygame.sprite.Group()
+    sprite = pygame.sprite.Sprite()
+    sprite.image = load_image("youlose.png")
+    sprite.rect = sprite.image.get_rect()
+    all_sprites.add(sprite)
+    sprite.rect.x = x
+    sprite.rect.y = 0
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+        if sprite.rect.x < 0:
+            sprite.rect.x += v * clock.tick() // 1000
+        all_sprites.draw(screen)
+        pygame.display.flip()
+    pygame.quit()
+
+
+def Winning_anim_func():
+    v = 200
+    x = -640
+    size = width, height = 600, 600
+    screen = pygame.display.set_mode(size)
+    screen.fill((0, 0, 255))
+    clock = pygame.time.Clock()
+    running = True
+    all_sprites = pygame.sprite.Group()
+    sprite = pygame.sprite.Sprite()
+    sprite.image = load_image("youwin.png")
+    sprite.rect = sprite.image.get_rect()
+    all_sprites.add(sprite)
+    sprite.rect.x = x
+    sprite.rect.y = 0
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+        if sprite.rect.x < 0:
+            sprite.rect.x += v * clock.tick() // 1000
+        all_sprites.draw(screen)
+        pygame.display.flip()
+    pygame.quit()
+
+
+def lose_scenario():
+    global SCORE, con, cur
+    SCORE -= 100
+    cur.execute(f"INSERT INTO Records(Status, Score) VALUES('lose', {str(SCORE)})")
+    Losing_anim_func()
+
+
+def win_scenario():
+    global SCORE, con, cur
+    SCORE += 50
+    cur.execute(f"INSERT INTO Records(Status, Score) VALUES('win', {str(SCORE)})")
+    Winning_anim_func()
+
+
 class Tile:
     def __init__(self):
         self.color = pygame.Color('black')
@@ -560,6 +626,10 @@ class Main_Tower(Building):
         super().pattern()
         global METHACASH
         METHACASH += METHACASH_ADDED
+        if self.hp <= 0 and self.team == 'player':
+            lose_scenario()
+        elif self.hp <= 0:
+            win_scenario()
 
 
 class Defense_Tower(Building):
