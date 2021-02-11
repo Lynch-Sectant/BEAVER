@@ -862,7 +862,52 @@ def play():
     global size, width, height
     size = width, height = w, h
 
+def load_level(filename):
+    filename = "data/" + filename
+    with open(filename, 'r') as mapFile:
+        level_map = [line.strip() for line in mapFile]
+ 
+    max_width = max(map(len, level_map))  
+    return list(map(lambda x: x.ljust(max_width, '.'), level_map))
 
+tile_images = {
+    'enemy_wall': load_image('wall_1.jpg'),
+    'player_wall': load_image('wall_2.jpg'),
+    'enemy_base': load_image('shtab_1.jpg'),
+    'player_base': load_image('shtab_2.jpg'),
+    'enemy_tower': load_image('vyshka_1.jpg'),
+    'player_tower': load_image('vyshka_2.jpg'),
+    'enemy_farm': load_image('farm_1.jpg'),
+    'player_farm': load_image('farm_2.jpg'),
+    'empty': load_image('grass.png')
+}
+
+unit_images = {
+    'enemy_trooper': load_image('trooper_1.jpg'),
+    'player_trooper': load_image('trooper_2.jpg'),
+    'enemy_sniper': load_image('sniper_1.jpg'),
+    'player_sniper': load_image('sniper_2.jpg'),
+    'enemy_gasfighter': load_image('gasfighter_1.jpg'),
+    'player_gasfighter': load_image('gasfighter_2.jpg')
+}
+
+def generate_level(level):
+    for y in range(len(level)):
+        for x in range(len(level[y])):
+            if level[y][x] == '#':
+                Tile('empty', x, y)
+            elif level[y][x] == 'A':
+                Tile('enemy_tower', x, y)
+            elif level[y][x] == 'T':
+                Tile('enemy_base', x, y)
+            elif level[y][x] == 'F':
+                Tile('enemy_farm', x, y)
+            elif level[y][x] == 'W':
+                Tile('enemy_wall', x, y)
+            elif level[y][x] == 'G':
+                Tile('player_farm', x, y)
+            elif level[y][x] == '@':
+                Tile('player_base', x, y)
 screen = pygame.display.set_mode(size)
 
 MONEY = pygame.USEREVENT + 1
@@ -1079,6 +1124,7 @@ screen = pygame.display.set_mode(size)
 edit_mode = True
 
 while playing:
+    
     for event in pygame.event.get():
         life_board.render(screen)
         if event.type == pygame.QUIT:
