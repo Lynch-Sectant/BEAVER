@@ -252,7 +252,6 @@ def Losing_anim_func():
     screen.fill((0, 0, 255))
     clock = pygame.time.Clock()
     running = True
-    all_sprites = pygame.sprite.Group()
     sprite = pygame.sprite.Sprite()
     sprite.image = load_image("youlose.png")
     sprite.rect = sprite.image.get_rect()
@@ -278,7 +277,6 @@ def Winning_anim_func():
     screen.fill((0, 0, 255))
     clock = pygame.time.Clock()
     running = True
-    all_sprites = pygame.sprite.Group()
     sprite = pygame.sprite.Sprite()
     sprite.image = load_image("youwin.png")
     sprite.rect = sprite.image.get_rect()
@@ -627,8 +625,10 @@ class Main_Tower(Building):
         global METHACASH
         METHACASH += METHACASH_ADDED
         if self.hp <= 0 and self.team == 'player':
+            all_sprites.kill()
             lose_scenario()
         elif self.hp <= 0:
+            all_sprites.kill()
             win_scenario()
 
 
