@@ -1126,7 +1126,7 @@ edit_mode = True
 while playing:
     
     for event in pygame.event.get():
-        x, y = event.pos[1], event.pos[2]
+        x, y = event.pos[0], event.pos[1]
         life_board.render(screen)
         if event.type == pygame.QUIT:
             playing = False
