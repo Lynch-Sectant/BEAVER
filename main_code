@@ -1147,20 +1147,20 @@ while playing:
                     CHOSEN_ENTITY = Wall('wall_1', 1, 1, life_board, 'player', 5)
                 elif event.type == pygame.MOUSEBUTTONUP and METHACASH >= CHOSEN_ENTITY.get_price():
                     x, y = event.pos[0], event.pos[1]
-                    life_board.tiles[life_board.get_tile((x, y))[0]][
-                        life_board.get_tile((x, y))[1]].drawn = CHOSEN_ENTITY
+                    CHOSEN_ENTITY.set_pos(life_board.tiles[life_board.get_tile((x, y))[0]][
+                        life_board.get_tile((x, y))[1]].drawn)
                         
                 elif event.key == pygame.K_KP_ENTER:
-                    for i in range(height):
-                        for j in range(width):
+                    for i in range(len(life_board.tiles)):
+                        for j in range(len(life_board.tiles[0])):
                             if life_board.get_tile([j, i]) is None and METHACASH >= 5 and random.randint(0, 100) >= 75:
-                                light = random.choise(Trooper('trooper_2', j, i, life_board, 3, 5, 5, 1, 8, 'enemy'),
-                                                      Sniper('sniper', x, y, life_board, 3, 5, 3, 2, 12, 'enemy'))
+                                light = random.choise(Trooper('trooper_2', i, j, life_board, 3, 5, 5, 1, 8, 'enemy'),
+                                                      Sniper('sniper', i, j, life_board, 3, 5, 3, 2, 12, 'enemy'))
 
-                                life_board.tiles[life_board.get_tile((x, y))[0]][life_board.get_tile((x, y))[1]].drawn = light
-                            if life_board.get_tile([j, i]) is None and METHACASH >= 20 and random.randint(0, 100) >= 75:
-                                heavy = GasFighter('gas_fighter_2', x, y, life_board, 7, 3, 7, 3, 12, 'enemy')
-                                life_board.tiles[life_board.get_tile((x, y))[0]][life_board.get_tile((x, y))[1]].drawn = heavy
+                                light.set_pos(life_board.tiles[life_board.get_tile((i, j))[0]][life_board.get_tile((j, i))[1]].drawn)
+                            if life_board.get_tile([i, j]) is None and METHACASH >= 20 and random.randint(0, 100) >= 75:
+                                heavy = GasFighter('gas_fighter_2', i, j, life_board, 7, 3, 7, 3, 12, 'enemy')
+                                heavy.set_pos(life_board.tiles[life_board.get_tile((i, j))[0]][life_board.get_tile((i, j))[1]].drawn)
                     edit_mode = False
                     
             if not edit_mode:
