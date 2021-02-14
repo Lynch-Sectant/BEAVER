@@ -1126,6 +1126,7 @@ edit_mode = True
 while playing:
     
     for event in pygame.event.get():
+        x, y = event.pos[1], event.pos[2]
         life_board.render(screen)
         if event.type == pygame.QUIT:
             playing = False
@@ -1145,13 +1146,15 @@ while playing:
                     CHOSEN_ENTITY = Defense_Tower('vyshka_1', 1, 1, 'player', 10)
                 elif event.key == pygame.K_i:
                     CHOSEN_ENTITY = Wall('wall_1', 1, 1, life_board, 'player', 5)
-                if event.type == pygame.MOUSEBUTTONUP and METHACASH >= CHOSEN_ENTITY.get_price():
-                    CHOSEN_ENTITY.set_pos(event.get.pos())
+                elif event.type == pygame.MOUSEBUTTONUP and METHACASH >= CHOSEN_ENTITY.get_price():
+                    life_board.tiles[life_board.get_tile((x, y))[0]][
+                        life_board.get_tile((x, y))[1]].drawn = CHOSEN_ENTITY
+                        
                 elif event.key == pygame.K_KP_ENTER:
                     for i in range(height):
                         for j in range(width):
                             if life_board.get_tile([j, i]) is None and METHACASH >= 5 and random.randint(0, 100) >= 75:
-                                light = random.choise(Trooper('trooper_2', x, y, life_board, 3, 5, 5, 1, 8, 'enemy'),
+                                light = random.choise(Trooper('trooper_2', j, i, life_board, 3, 5, 5, 1, 8, 'enemy'),
                                                       Sniper('sniper', x, y, life_board, 3, 5, 3, 2, 12, 'enemy'))
 
                                 life_board.tiles[life_board.get_tile((x, y))[0]][life_board.get_tile((x, y))[1]].drawn = light
@@ -1159,10 +1162,7 @@ while playing:
                                 heavy = GasFighter('gas_fighter_2', x, y, life_board, 7, 3, 7, 3, 12, 'enemy')
                                 life_board.tiles[life_board.get_tile((x, y))[0]][life_board.get_tile((x, y))[1]].drawn = heavy
                     edit_mode = False
-                if event.type == pygame.MOUSEBUTTONUP:
-                    x, y = event.pos()
-                    life_board.tiles[life_board.get_tile((x, y))[0]][
-                        life_board.get_tile((x, y))[1]].drawn = CHOSEN_ENTITY
+                    
             if not edit_mode:
                 if event.type == MONEY:
                     methacash(25, 25)
