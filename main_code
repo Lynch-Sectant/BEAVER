@@ -1126,7 +1126,6 @@ edit_mode = True
 while playing:
     
     for event in pygame.event.get():
-        x, y = event.pos[0], event.pos[1]
         life_board.render(screen)
         if event.type == pygame.QUIT:
             playing = False
@@ -1147,6 +1146,7 @@ while playing:
                 elif event.key == pygame.K_i:
                     CHOSEN_ENTITY = Wall('wall_1', 1, 1, life_board, 'player', 5)
                 elif event.type == pygame.MOUSEBUTTONUP and METHACASH >= CHOSEN_ENTITY.get_price():
+                    x, y = event.pos[0], event.pos[1]
                     life_board.tiles[life_board.get_tile((x, y))[0]][
                         life_board.get_tile((x, y))[1]].drawn = CHOSEN_ENTITY
                         
