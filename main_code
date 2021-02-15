@@ -364,7 +364,7 @@ class Entity(pygame.sprite.Sprite):
     def __init__(self, sheet, x, y, board, team, rows=1, columns=1):
         super().__init__(all_sprites)
         self.frames = []
-        self.cut_sheet(sheet, columns, rows)
+        self.cut_sheet(load_image(sheet), columns, rows)
         self.cur_frame = 0
         self.image = self.frames[self.cur_frame]
         self.set_pos(x, y)
