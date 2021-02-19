@@ -367,9 +367,9 @@ class Entity(pygame.sprite.Sprite):
         self.cut_sheet(load_image(sheet), columns, rows)
         self.cur_frame = 0
         self.image = self.frames[self.cur_frame]
-        self.set_pos(x, y)
         self.board = board
         self.team = team
+        self.set_pos(x, y)
 
     def set_pos(self, x, y):
         self.coords = x, y
