@@ -1136,7 +1136,7 @@ while playing:
                 if event.key == pygame.K_e:
                     CHOSEN_ENTITY = Trooper('trooper_2.jpg', 1, 1,  life_board, 3, 5, 5, 1, 8, 'player')
                 elif event.key == pygame.K_r:
-                    CHOSEN_ENTITY = Sniper('sniper_2.jpg', 1, 1, life_board 3, 5, 3, 2, 12, 'player')
+                    CHOSEN_ENTITY = Sniper('sniper_2.jpg', 1, 1, life_board, 3, 5, 3, 2, 12, 'player')
                 elif event.key == pygame.K_w:
                     CHOSEN_ENTITY = GasFighter('gasfighter_2.jpg', 1, 1, life_board, 7, 3, 7, 3, 12, 'player')
                 elif event.key == pygame.K_a:
