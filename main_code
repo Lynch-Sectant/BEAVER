@@ -1141,7 +1141,7 @@ while playing:
                 elif event.key == pygame.K_a:
                     CHOSEN_ENTITY = Farm('farm_2.jpg', 1, 1, life_board, 'player', 10)
                 elif event.key == pygame.K_s:
-                    CHOSEN_ENTITY = Defense_Tower('vyshka_2.jpg', 1, 1, life_board 'player', 10)
+                    CHOSEN_ENTITY = Defense_Tower('vyshka_2.jpg', 1, 1, life_board, 'player', 10)
                 elif event.key == pygame.K_i:
                     CHOSEN_ENTITY = Wall('wall_2.jpg', 1, 1, life_board, 'player', 5)
                 elif event.type == pygame.MOUSEBUTTONUP and METHACASH >= CHOSEN_ENTITY.get_price():
