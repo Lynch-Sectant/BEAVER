@@ -1132,7 +1132,7 @@ while playing:
 
     for event in pygame.event.get():
         life_board.render(screen)
-        generate_level(load_level('Уровень.docx'))
+        generate_level(load_level('Уровень.txt'))
         if event.type == pygame.QUIT:
             playing = False
         if event.type == pygame.MOUSEBUTTONDOWN:
