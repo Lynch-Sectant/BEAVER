@@ -308,10 +308,13 @@ def win_scenario():
     Winning_anim_func()
 
 
-class Tile:
-    def __init__(self):
+class Tile(pygame.sprite.Sprite):
+    def __init__(self, sheet):
+        super.__init__(all_sprites)
         self.color = pygame.Color('black')
         self.drawn = None
+        self.image = load_image(sheet)
+        self.rect = self.image.get_rect()
 
     def pattern(self):
         self.drawn.pattern()
