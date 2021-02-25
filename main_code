@@ -230,6 +230,7 @@ ENEMY_UNITS = pygame.sprite.Group()
 PLAYER_BUILDINGS = pygame.sprite.Group()
 ENEMY_BUILDINGS = pygame.sprite.Group()
 PROJECTILES = pygame.sprite.Group()
+TILES = pygame.sprite.Group()
 ADDED = 0
 METHACASH = 0
 METHACASH_ADDED = 10
@@ -310,7 +311,7 @@ def win_scenario():
 
 class Tile(pygame.sprite.Sprite):
     def __init__(self, sheet):
-        super.__init__(all_sprites)
+        super.__init__(TILES)
         self.color = pygame.Color('black')
         self.drawn = None
         self.image = load_image(sheet)
@@ -342,6 +343,7 @@ class Board:
                 b = (w - self.left) // self.tile_size
                 pygame.draw.rect(screen, self.tiles[a][b].color, (w + 1, h + 1, self.tile_size - 2, self.tile_size - 2))
         all_sprites.draw(screen)
+        TILES.draw(screen)
 
     def get_tile(self, mouse_pos):
         if mouse_pos[0] > self.left + self.tile_size * self.width:
