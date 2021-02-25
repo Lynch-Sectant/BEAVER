@@ -342,8 +342,8 @@ class Board:
                 a = (h - self.top) // self.tile_size
                 b = (w - self.left) // self.tile_size
                 pygame.draw.rect(screen, self.tiles[a][b].color, (w + 1, h + 1, self.tile_size - 2, self.tile_size - 2))
-        all_sprites.draw(screen)
         TILES.draw(screen)
+        all_sprites.draw(screen)
 
     def get_tile(self, mouse_pos):
         if mouse_pos[0] > self.left + self.tile_size * self.width:
