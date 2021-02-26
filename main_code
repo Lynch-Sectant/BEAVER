@@ -328,7 +328,11 @@ class Board:
         self.left = 10
         self.top = 10
         self.tile_size = 20
-        self.tiles = [[Tile() for _ in range(width)] for _ in range(height)]
+        self.tiles = [[Tile('grass.png') for _ in range(width)] for _ in range(height)]
+        for y in range(self.height):
+            for x in range(len(self.tiles[y])):
+                self.tiles[y][x].rect.x = self.left + x * self.tile_size
+                self.tiles[y][x].rect.y = self.left + y * self.tile_size
 
     def set_position(self, left, top, tile_size):
         self.left = left
