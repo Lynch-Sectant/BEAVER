@@ -382,7 +382,7 @@ class Entity(pygame.sprite.Sprite):
         if self.team == 'player':
             METHACASH -= price
         else:
-            ENEMYMETHACASH -= price
+            ENEMY_METHACASH -= price
 
     def set_pos(self, x, y):
         self.coords = x, y
