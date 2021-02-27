@@ -370,7 +370,7 @@ class Board:
 
 
 class Entity(pygame.sprite.Sprite):
-    def __init__(self, sheet, x, y, board, team, rows=1, columns=1):
+    def __init__(self, sheet, x, y, board, team, price=0, rows=1, columns=1):
         super().__init__(all_sprites)
         self.frames = []
         self.cut_sheet(load_image(sheet), columns, rows)
@@ -379,6 +379,7 @@ class Entity(pygame.sprite.Sprite):
         self.board = board
         self.team = team
         self.set_pos(x, y)
+        METHACASH -= price
 
     def set_pos(self, x, y):
         self.coords = x, y
@@ -395,8 +396,8 @@ class Entity(pygame.sprite.Sprite):
 
 
 class Building(Entity):
-    def __init__(self, sheet, x, y, board, team, hp):
-        super().__init__(sheet, x, y, board, team)
+    def __init__(self, sheet, x, y, board, team, hp, price):
+        super().__init__(sheet, x, y, board, team, price)
         self.hp = hp
         if self.team == 'player':
             PLAYER_BUILDINGS.add(self)
@@ -422,7 +423,7 @@ class Building(Entity):
 
 class Unit(Entity):
     def __init__(self, sheet, x, y, board, price, speed, hp, dmg, vision_radius, team):
-        super().__init__(sheet, x, y, board, team)
+        super().__init__(sheet, x, y, board, team, price)
         self.price = price
         self.speed = speed
         self.hp = hp
@@ -641,8 +642,8 @@ class Main_Tower(Building):
 
 
 class Defense_Tower(Building):
-    def __init__(self, sheet, x, y, board, team, hp):
-        super().__init__(sheet, x, y, board, team)
+    def __init__(self, sheet, x, y, board, team, hp, price=0):
+        super().__init__(sheet, x, y, board, team, price)
         self.hp = hp
         if self.team == 'player':
             PLAYER_BUILDINGS.add(self)
@@ -677,8 +678,8 @@ class Defense_Tower(Building):
 
 # all code from here
 class Wall(Building):
-    def __init__(self, sheet, x, y, board, team, hp):
-        super().__init__(sheet, x, y, board, team, hp)
+    def __init__(self, sheet, x, y, board, team, hp, price=0):
+        super().__init__(sheet, x, y, board, team, price, hp)
         self.checked = False
         self.pattern()
 
@@ -910,17 +911,17 @@ def generate_level(level, board):
             if level[y][x] == '#':
                 tile.drawn = None
             elif level[y][x] == 'A':
-                tile.drawn = Defense_Tower()
+                tile.drawn = Defense_Tower('vyshka_1.png', x, y, board, 'enemy', 10, 10)
             elif level[y][x] == 'T':
-                tile.drawn = Main_Tower()
+                tile.drawn = Main_Tower('shtab_1.png', x, y, board, 'enemy', 75, 0)
             elif level[y][x] == 'F':
-                tile.drawn = Farm()
+                tile.drawn = Farm('farm_1.png', x, y, board, 'enemy', 10, 0)
             elif level[y][x] == 'W':
-                tile.drawn = Wall()
+                tile.drawn = Wall('wall_1.png', x, y, board, 'enemy', 10, 0)
             elif level[y][x] == 'G':
-                tile.drawn = Farm
+                tile.drawn = Farm('farm_2.png', x, y, board, 'player', 10, 0)
             elif level[y][x] == '@':
-                tile.drawn = Main_Tower
+                tile.drawn = Main_Tower('shtab_2.png', x, y, board, 'player', 75, 0)
             board.tiles[y][x] = tile
 
 
