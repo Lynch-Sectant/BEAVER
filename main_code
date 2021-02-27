@@ -903,23 +903,24 @@ unit_images = {
 }
 
 
-def generate_level(level):
+def generate_level(level, board):
     for y in range(len(level)):
         for x in range(len(level[y])):
+            tile = Tile('grass.png')
             if level[y][x] == '#':
-                Tile('empty', x, y)
+                tile.drawn = None
             elif level[y][x] == 'A':
-                Tile('enemy_tower', x, y)
+                pass
             elif level[y][x] == 'T':
-                Tile('enemy_base', x, y)
+                pass
             elif level[y][x] == 'F':
-                Tile('enemy_farm', x, y)
+                pass
             elif level[y][x] == 'W':
-                Tile('enemy_wall', x, y)
+                pass
             elif level[y][x] == 'G':
-                Tile('player_farm', x, y)
+                pass
             elif level[y][x] == '@':
-                Tile('player_base', x, y)
+                pass
 
 
 screen = pygame.display.set_mode(size)
