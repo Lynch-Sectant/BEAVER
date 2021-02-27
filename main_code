@@ -372,6 +372,7 @@ class Board:
 class Entity(pygame.sprite.Sprite):
     def __init__(self, sheet, x, y, board, team, price=0, rows=1, columns=1):
         super().__init__(all_sprites)
+        global METHACASH, ENEMY_METHACASH
         self.frames = []
         self.cut_sheet(load_image(sheet), columns, rows)
         self.cur_frame = 0
