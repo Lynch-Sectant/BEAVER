@@ -914,17 +914,17 @@ def generate_level(level, board):
             if level[y][x] == '#':
                 tile.drawn = None
             elif level[y][x] == 'A':
-                tile.drawn = Defense_Tower('vyshka_1.png', x, y, board, 'enemy', 10, 10)
+                tile.drawn = Defense_Tower('vyshka_1.jpg', x, y, board, 'enemy', 10, 10)
             elif level[y][x] == 'T':
-                tile.drawn = Main_Tower('shtab_1.png', x, y, board, 'enemy', 75, 0)
+                tile.drawn = Main_Tower('shtab_1.jpg', x, y, board, 'enemy', 75, 0)
             elif level[y][x] == 'F':
-                tile.drawn = Farm('farm_1.png', x, y, board, 'enemy', 10, 0)
+                tile.drawn = Farm('farm_1.jpg', x, y, board, 'enemy', 10, 0)
             elif level[y][x] == 'W':
-                tile.drawn = Wall('wall_1.png', x, y, board, 'enemy', 10, 0)
+                tile.drawn = Wall('wall_1.jpg', x, y, board, 'enemy', 10, 0)
             elif level[y][x] == 'G':
-                tile.drawn = Farm('farm_2.png', x, y, board, 'player', 10, 0)
+                tile.drawn = Farm('farm_2.jpg', x, y, board, 'player', 10, 0)
             elif level[y][x] == '@':
-                tile.drawn = Main_Tower('shtab_2.png', x, y, board, 'player', 75, 0)
+                tile.drawn = Main_Tower('shtab_2.jpg', x, y, board, 'player', 75, 0)
             board.tiles[y][x] = tile
 
 
