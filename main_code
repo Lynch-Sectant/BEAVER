@@ -910,17 +910,17 @@ def generate_level(level, board):
             if level[y][x] == '#':
                 tile.drawn = None
             elif level[y][x] == 'A':
-                pass
+                tile.drawn = Defense_Tower()
             elif level[y][x] == 'T':
-                pass
+                tile.drawn = Main_Tower()
             elif level[y][x] == 'F':
-                pass
+                tile.drawn = Farm()
             elif level[y][x] == 'W':
-                pass
+                tile.drawn = Wall()
             elif level[y][x] == 'G':
-                pass
+                tile.drawn = Farm
             elif level[y][x] == '@':
-                pass
+                tile.drawn = Main_Tower
             board.tiles[y][x] = tile
 
 
