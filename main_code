@@ -643,7 +643,7 @@ class Main_Tower(Building):
 
 class Defense_Tower(Building):
     def __init__(self, sheet, x, y, board, team, hp, price=0):
-        super().__init__(sheet, x, y, board, team, price)
+        super().__init__(sheet, x, y, board, team, hp, price)
         self.hp = hp
         if self.team == 'player':
             PLAYER_BUILDINGS.add(self)
