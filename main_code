@@ -387,8 +387,8 @@ class Entity(pygame.sprite.Sprite):
 
     def set_pos(self, x, y):
         self.coords = x, y
-        self.rect.x = self.board.left + (x - 1) * self.board.tile_size
-        self.rect.y = self.board.top + (y - 1) * self.board.tile_size
+        self.rect.x = self.board.left + (x) * self.board.tile_size
+        self.rect.y = self.board.top + (y) * self.board.tile_size
 
     def cut_sheet(self, sheet, columns, rows):
         self.rect = pygame.Rect(0, 0, sheet.get_width() // columns,
