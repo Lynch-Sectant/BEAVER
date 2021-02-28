@@ -409,15 +409,16 @@ class Building(Entity):
             ENEMY_BUILDINGS.add(self)
 
     def pattern(self):
-        if self.team == 'enemy' and len(pygame.sprite.spritecollide(self, PROJECTILES)) > 0:
-            for k in pygame.sprite.spritecollide(self, PROJECTILES):
+        global PROJECTILES
+        if self.team == 'enemy' and len(pygame.sprite.spritecollide(self, PROJECTILES, False)) > 0:
+            for k in pygame.sprite.spritecollide(self, PROJECTILES, False):
                 if k.team == 'player':
                     self.hp -= 1
                     if self.hp <= 0:
                         self.kill()
                         return None
-        elif self.team == 'player' and len(pygame.sprite.spritecollide(self, PROJECTILES)) > 0:
-            for k in pygame.sprite.spritecollide(self, PROJECTILES):
+        elif self.team == 'player' and len(pygame.sprite.spritecollide(self, False, PROJECTILES, False)) > 0:
+            for k in pygame.sprite.spritecollide(self, PROJECTILES, False):
                 if k.team == 'enemy':
                     self.hp -= 1
                     if self.hp <= 0:
