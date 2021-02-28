@@ -332,7 +332,7 @@ class Board:
         for y in range(self.height):
             for x in range(len(self.tiles[y])):
                 self.tiles[y][x].rect.x = self.left + x * self.tile_size
-                self.tiles[y][x].rect.y = self.left + y * self.tile_size
+                self.tiles[y][x].rect.y = self.top + y * self.tile_size
 
     def set_position(self, left, top, tile_size):
         self.left = left
