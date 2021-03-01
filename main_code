@@ -687,10 +687,12 @@ class Wall(Building):
     def __init__(self, sheet, x, y, board, team, hp, price=0):
         super().__init__(sheet, x, y, board, team, price, hp)
         self.checked = False
-        self.pattern()
+        self.buff()
 
     def pattern(self):
         super().pattern()
+        
+    def buff(self):
         for h in range(-1, 2):
             for w in range(-1, 2):
                 if self.board.tiles[self.coords[0] + h][self.coords[1] + w].drawn.__class__ == Wall:
