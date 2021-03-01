@@ -1144,12 +1144,12 @@ pygame.quit()
 pygame.init()
 screen = pygame.display.set_mode(size)
 edit_mode = True
-
+life_board.render(screen)
+generate_level(load_level('Уровень.txt'), life_board)
 while playing:
 
     for event in pygame.event.get():
-        life_board.render(screen)
-        generate_level(load_level('Уровень.txt'), life_board)
+
         if event.type == pygame.QUIT:
             playing = False
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -1207,4 +1207,3 @@ while playing:
                         life_board.tiles[i][j].pattern()
     pygame.display.flip()
 pygame.quit()
-
