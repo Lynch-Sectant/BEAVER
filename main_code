@@ -399,6 +399,9 @@ class Entity(pygame.sprite.Sprite):
                 frame_location = (self.rect.w * i, self.rect.h * j)
                 self.frames.append(sheet.subsurface(pygame.Rect(frame_location, self.rect.size)))
 
+    def is_alive(self):
+        return self.hp > 0
+
 
 class Building(Entity):
     def __init__(self, sheet, x, y, board, team, hp, price):
@@ -657,16 +660,20 @@ class Defense_Tower(Building):
             ENEMY_BUILDINGS.add(self)
         self.target = None
 
-    def pattern(self, v_radius):
+    def pattern(self, v_radius=10):
         super().pattern()
         lens = {}
         if self.target is None:
             for h in range(-v_radius, v_radius):
                 for w in range(-v_radius, v_radius):
+                    if self.coords[1] + h < 0 or self.coords[1] + h >= len(self.board.tiles) or self.coords[0] + w < 0 or self.coords[0] + w >= len(self.board.tiles[self.coords[1] + h]):
+                        continue
                     lens[self.board.tiles[self.coords[1] + h][self.coords[0] + w].drawn] = ((w + h) / 2 + 0.5) // 1
         elif not self.target.is_alive():
             for h in range(-v_radius, v_radius):
                 for w in range(-v_radius, v_radius):
+                    if self.coords[1] + h < 0 or self.coords[1] + h >= len(self.board.tiles) or self.coords[0] + w < 0 or self.coords[0] + w >= len(self.board.tiles[self.coords[1] + h]):
+                        continue
                     lens[self.board.tiles[self.coords[1] + h][self.coords[0] + w].drawn] = ((w + h) / 2 + 0.5) // 1
         for k in lens.keys():
             if lens[k] == min(lens.values()):
@@ -714,7 +721,7 @@ class Farm(Building):
 
 class Projectile(Entity):
     def __init__(self, sheet, x, y, board, team, vx, vy, st_coords):
-        super().__init__(self, sheet, x, y, board, team)
+        super().__init__(sheet, x, y, board, team)
         self.vx = vx
         self.vy = vy
         self.coords = st_coords
@@ -731,8 +738,8 @@ class Projectile(Entity):
 
 
 class Bullet(Projectile):
-    def __init__(self, sheet, columns, rows, x, y, board, team, vx, vy, st_coords, piercing=0):
-        super.__init__(sheet, columns, rows, x, y, board, team, vx, vy, st_coords)
+    def __init__(self, sheet, x, y, board, team, vx, vy, st_coords, piercing=0):
+        super().__init__(sheet, x, y, board, team, vx, vy, st_coords)
         self.piercing = piercing
 
     def pattern(self):
@@ -937,6 +944,7 @@ def generate_level(level, board):
 screen = pygame.display.set_mode(size)
 
 MONEY = pygame.USEREVENT + 1
+pygame.time.set_timer(MONEY, 500)
 
 if __name__ == '__main__':
     window_show = 0
@@ -1144,14 +1152,28 @@ while running:
                     window_show = 3
 
     pygame.display.flip()
+
 pygame.quit()
 pygame.init()
 screen = pygame.display.set_mode(size)
 edit_mode = True
 life_board.render(screen)
-generate_level(load_level('Уровень.txt'), life_board)
-while playing:
 
+generate_level(load_level('Уровень.txt'), life_board)
+
+while playing:
+    if not edit_mode:
+        if event.type == MONEY:
+            methacash(25, 25)
+        for i in range(len(life_board.tiles)):
+            for j in range(len(life_board.tiles[0])):
+                if isinstance(life_board.tiles[i][j].drawn, Unit):
+                    life_board.move(ENEMY_COORDS)
+                    life_board.tiles[i][j].pattern()
+                if isinstance(life_board.tiles[i][j].drawn, Building):
+                    life_board.tiles[i][j].pattern()
+                if isinstance(life_board.tiles[i][j].drawn, Projectile):
+                    life_board.tiles[i][j].pattern()
     for event in pygame.event.get():
 
         if event.type == pygame.QUIT:
@@ -1184,17 +1206,16 @@ while playing:
                 elif event.key == pygame.K_p:
                     for i in range(len(life_board.tiles)):
                         for j in range(len(life_board.tiles[0])):
-                            if life_board.get_tile([j, i]) is None and METHACASH >= 5 and random.randint(0, 100) >= 75 :
-                                light = random.choice(
+                            if life_board.tiles[i][j].drawn is None and random.randint(0, 100) >= 95:
+                                light = random.choice([
                                     Trooper('trooper_1.jpg', i, j, life_board, 3, 5, 5, 1, 8, 'enemy'),
-                                    Sniper('sniper_1.jpg', i, j, life_board, 3, 5, 3, 2, 12, 'enemy'))
-                                light.set_pos(life_board.tiles[life_board.get_tile((i, j))[0]][
-                                                  life_board.get_tile((j, i))[1]].drawn)
+                                    Sniper('sniper_1.jpg', i, j, life_board, 3, 5, 3, 2, 12, 'enemy')])
+                                light.set_pos(i, j)
                                                   
-                            if life_board.get_tile([i, j]) is None and METHACASH >= 20 and random.randint(0, 100) >= 75:
-                                heavy = GasFighter('gas_fighter_1.jpg', i, j, life_board, 7, 3, 7, 3, 12, 'enemy')
-                                heavy.set_pos(life_board.tiles[life_board.get_tile((i, j))[0]][
-                                                  life_board.get_tile((i, j))[1]].drawn)
+                            if life_board.tiles[i][j].drawn is None and random.randint(0, 100) >= 95:
+                                heavy = GasFighter('gasfighter_1.jpg', i, j, life_board, 7, 3, 7, 3, 12, 'enemy')
+                                #heavy.set_pos(life_board.tiles[life_board.get_tile((i, j))[0]][
+                                                  #life_board.get_tile((i, j))[1]].drawn)
 
 
                     edit_mode = False
@@ -1204,12 +1225,12 @@ while playing:
                 methacash(25, 25)
             for i in range(len(life_board.tiles)):
                 for j in range(len(life_board.tiles[0])):
-                    if life_board.tiles[i][j].drawn is Unit:
+                    if isinstance(life_board.tiles[i][j].drawn, Unit):
                         life_board.move(ENEMY_COORDS)
                         life_board.tiles[i][j].pattern()
-                    if life_board.tiles[i][j].drawn is Building:
+                    if isinstance(life_board.tiles[i][j].drawn, Building):
                         life_board.tiles[i][j].pattern()
-                    if life_board.tiles[i][j].drawn is Projectile:
+                    if isinstance(life_board.tiles[i][j].drawn, Projectile):
                         life_board.tiles[i][j].pattern()
     pygame.display.flip()
 pygame.quit()
