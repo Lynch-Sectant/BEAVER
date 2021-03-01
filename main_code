@@ -62,6 +62,8 @@ result = cur.execute("""SELECT Status, Score FROM Records
 status3 = result[0][0]
 score3 = result[0][1]
 
+enemy_chosen_unit = 0
+
 
 def check(x, y, w, h, posx, posy):
     if x <= posx <= w + x and y <= posy <= h + y:
@@ -1180,15 +1182,19 @@ while playing:
                 elif event.key == pygame.K_p:
                     for i in range(len(life_board.tiles)):
                         for j in range(len(life_board.tiles[0])):
-                            if life_board.get_tile([j, i]) is None and METHACASH >= 5 and random.randint(0, 100) >= 75:
+                            if life_board.get_tile([j, i]) is None and METHACASH >= 5 and random.randint(0, 100) >= 75 :
                                 light = random.choice(
                                     Trooper('trooper_1.jpg', i, j, life_board, 3, 5, 5, 1, 8, 'enemy'),
                                     Sniper('sniper_1.jpg', i, j, life_board, 3, 5, 3, 2, 12, 'enemy'))
-
-                                light.set_pos((j, i))
+                                light.set_pos(life_board.tiles[life_board.get_tile((i, j))[0]][
+                                                  life_board.get_tile((j, i))[1]].drawn)
+                                                  
                             if life_board.get_tile([i, j]) is None and METHACASH >= 20 and random.randint(0, 100) >= 75:
                                 heavy = GasFighter('gas_fighter_1.jpg', i, j, life_board, 7, 3, 7, 3, 12, 'enemy')
-                                heavy.set_pos((j, i))
+                                heavy.set_pos(life_board.tiles[life_board.get_tile((i, j))[0]][
+                                                  life_board.get_tile((i, j))[1]].drawn)
+
+
                     edit_mode = False
 
         else:
