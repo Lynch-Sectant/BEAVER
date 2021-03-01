@@ -1177,7 +1177,7 @@ while playing:
                     CHOSEN_ENTITY.set_pos(life_board.tiles[life_board.get_tile((x, y))[0]][
                                               life_board.get_tile((x, y))[1]].drawn)
 
-                elif event.key == pygame.K_KP_ENTER:
+                elif event.key == pygame.K_p:
                     for i in range(len(life_board.tiles)):
                         for j in range(len(life_board.tiles[0])):
                             if life_board.get_tile([j, i]) is None and METHACASH >= 5 and random.randint(0, 100) >= 75:
