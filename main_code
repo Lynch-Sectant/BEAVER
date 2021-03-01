@@ -1185,12 +1185,10 @@ while playing:
                                     Trooper('trooper_1.jpg', i, j, life_board, 3, 5, 5, 1, 8, 'enemy'),
                                     Sniper('sniper_1.jpg', i, j, life_board, 3, 5, 3, 2, 12, 'enemy'))
 
-                                light.set_pos(life_board.tiles[life_board.get_tile((i, j))[0]][
-                                                  life_board.get_tile((j, i))[1]].drawn)
+                                light.set_pos((j, i))
                             if life_board.get_tile([i, j]) is None and METHACASH >= 20 and random.randint(0, 100) >= 75:
                                 heavy = GasFighter('gas_fighter_1.jpg', i, j, life_board, 7, 3, 7, 3, 12, 'enemy')
-                                heavy.set_pos(life_board.tiles[life_board.get_tile((i, j))[0]][
-                                                  life_board.get_tile((i, j))[1]].drawn)
+                                heavy.set_pos((j, i))
                     edit_mode = False
 
         else:
